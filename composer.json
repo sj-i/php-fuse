@@ -1,0 +1,27 @@
+{
+  "name": "sj-i/php-fuse",
+  "description": "PHP FFI bindings for FUSE",
+  "type": "library",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "keywords": [
+    "php",
+    "fuse",
+    "ffi"
+  ],
+  "authors": [
+    {
+      "name": "sji",
+      "homepage": "https://twitter.com/sji_ch"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Fuse\\" : "src/"
+    }
+  },
+  "require": {
+    "php": "^7.4|^8.0",
+    "ext-ffi": "*"
+  }
+}

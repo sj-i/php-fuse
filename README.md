@@ -1,6 +1,7 @@
 # php-fuse
 
 ![Minimum PHP version: 7.4.0](https://img.shields.io/badge/php-7.4.0%2B-blue.svg)
+[![Packagist](https://img.shields.io/packagist/v/sj-i/php-fuse.svg)](https://packagist.org/packages/sj-i/php-fuse)
 
 PHP FFI bindings for libfuse
 

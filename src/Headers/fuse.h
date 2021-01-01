@@ -95,13 +95,15 @@ struct flock
     pid_t l_pid;
 };
 
-enum fuse_buf_flags {
+enum fuse_buf_flags
+{
 	FUSE_BUF_IS_FD		= (1 << 1),
 	FUSE_BUF_FD_SEEK	= (1 << 2),
 	FUSE_BUF_FD_RETRY	= (1 << 3),
 };
 
-struct fuse_buf {
+struct fuse_buf
+{
 	size_t size;
 	enum fuse_buf_flags flags;
 	void *mem;
@@ -109,7 +111,8 @@ struct fuse_buf {
 	off_t pos;
 };
 
-struct fuse_bufvec {
+struct fuse_bufvec
+{
 	size_t count;
 	size_t idx;
 	size_t off;
@@ -123,7 +126,8 @@ struct fuse_pollhandle;
 typedef int (*fuse_fill_dir_t) (void *buf, const char *name, const struct stat *stbuf, off_t off);
 typedef struct fuse_dirhandle *fuse_dirh_t;
 typedef int (*fuse_dirfil_t) (fuse_dirh_t h, const char *name, int type, ino_t ino);
-struct fuse_operations {
+struct fuse_operations
+{
 	int (*getattr) (const char *, struct stat *);
 	int (*readlink) (const char *, char *, size_t);
 	int (*getdir) (const char *, fuse_dirh_t, fuse_dirfil_t);

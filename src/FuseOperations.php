@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Fuse;
 
 use Closure;
+use FFI;
 use FFI\CData;
 
 final class FuseOperations
@@ -350,5 +351,17 @@ final class FuseOperations
             $fuse_operations->$name = Closure::fromCallable($callable);
         }
         return $this->cdata_cache = $fuse_operations;
+    }
+
+    public function getSize(): int
+    {
+        $typename = 'struct fuse_operations';
+        $type = Fuse::getInstance()->ffi->type(
+            $typename
+        );
+        $size = FFI::sizeof(
+            $type
+        );
+        return $size;
     }
 }

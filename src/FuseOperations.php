@@ -17,7 +17,7 @@ use Closure;
 use FFI;
 use FFI\CData;
 
-final class FuseOperations
+final class FuseOperations implements Mountable
 {
     /**
      * int (*getattr) (const char *, struct stat *);
@@ -363,5 +363,10 @@ final class FuseOperations
             $type
         );
         return $size;
+    }
+
+    public function getOperations(): FuseOperations
+    {
+        return $this;
     }
 }

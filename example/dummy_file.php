@@ -5,6 +5,7 @@ include __DIR__ . "/../vendor/autoload.php";
 use FFI\CData;
 use Fuse\Fuse;
 use Fuse\FuseOperations;
+use Fuse\Mounter;
 
 const FILE_PATH = '/example';
 const FILE_NAME = 'example';
@@ -87,7 +88,5 @@ $fuse_operations->open = 'open_cb';
 $fuse_operations->read = 'read_cb';
 $fuse_operations->readdir = 'readdir_cb';
 
-return Fuse::getInstance()->main(
-    $argv,
-    $fuse_operations,
-);
+$mounter = new Mounter();
+return $mounter->mount('/tmp/example/', $fuse_operations);

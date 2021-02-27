@@ -88,8 +88,6 @@ $fuse_operations->read = 'read_cb';
 $fuse_operations->readdir = 'readdir_cb';
 
 return Fuse::getInstance()->main(
-    $argc,
     $argv,
     $fuse_operations,
-    null
 );

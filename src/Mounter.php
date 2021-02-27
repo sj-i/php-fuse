@@ -30,6 +30,6 @@ class Mounter
             '-f',
             $path
         ];
-        return $this->fuse->main(count($args), $args, $mountable->getOperations(), null);
+        return $this->fuse->main($args, $mountable->getOperations());
     }
 }

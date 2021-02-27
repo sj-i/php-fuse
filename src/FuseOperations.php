@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Fuse;
 
+use Closure;
 use FFI\CData;
 
 final class FuseOperations
@@ -336,12 +337,18 @@ final class FuseOperations
      */
     public $fallocate = null;
 
+    private CData $cdata_cache;
 
 
-
-    public function toCData(): CData
+    public function getCData(): CData
     {
-        $fuse_my_operations = Fuse::getInstance()->ffi->new('struct fuse_operations');
-
+        $fuse_operations = Fuse::getInstance()->ffi->new('struct fuse_operations');
+        foreach ($this as $name => $callable) {
+            if (is_null($callable)) {
+                continue;
+            }
+            $fuse_operations->$name = Closure::fromCallable($callable);
+        }
+        return $this->cdata_cache = $fuse_operations;
     }
 }

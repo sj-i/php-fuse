@@ -42,7 +42,7 @@ final class Fuse
         return self::$instance;
     }
 
-    public function main(int $argc, array $argv, CData $fuse_my_operations, ?CData $user_data): int
+    public function main(int $argc, array $argv, FuseOperations $fuse_operations, ?CData $user_data): int
     {
         $typename = 'struct fuse_operations';
         $type = Fuse::getInstance()->ffi->type(
@@ -65,7 +65,7 @@ final class Fuse
         return Fuse::getInstance()->ffi->fuse_main_real(
             $argc,
             $argv_real,
-            FFI::addr($fuse_my_operations),
+            FFI::addr($fuse_operations->getCData()),
             $size,
             null
         );

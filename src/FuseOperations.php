@@ -22,14 +22,14 @@ final class FuseOperations
      *
      * @var null|callable(string $path, CData $stat): int
      */
-    public $getattr;
+    public $getattr = null;
 
     /**
      * int (*readlink) (const char *, char *, size_t);
      *
      * @var null|callable(string $path, CData $buffer, int $size): int
      */
-    public $readlink;
+    public $readlink = null;
 
     /**
      * int (*getdir) (const char *, fuse_dirh_t, fuse_dirfil_t);
@@ -37,252 +37,252 @@ final class FuseOperations
      * @deprecated
      * @var null|callable(string $path, CData $dirhandle, callable(CData $dirhandle, string $name, int $type, int $ino)): int
      */
-    public $getdir;
+    public $getdir = null;
 
     /**
      * int (*mknod) (const char *, mode_t, dev_t);
      *
      * @var null|callable
      */
-    public $mknod;
+    public $mknod = null;
 
     /**
      * int (*mkdir) (const char *, mode_t);
      *
      * @var null|callable
      */
-    public $mkdir;
+    public $mkdir = null;
 
     /**
      * int (*unlink) (const char *);
      *
      * @var null|callable
      */
-    public $unlink;
+    public $unlink = null;
 
     /**
      * int (*rmdir) (const char *);
      *
      * @var null|callable
      */
-    public $rmdir;
+    public $rmdir = null;
 
     /**
      * int (*symlink) (const char *, const char *);
      *
      * @var null|callable
      */
-    public $symlink;
+    public $symlink = null;
 
     /**
      * int (*rename) (const char *, const char *);
      *
      * @var null|callable
      */
-    public $rename;
+    public $rename = null;
 
     /**
      * int (*link) (const char *, const char *);
      *
      * @var null|callable
      */
-    public $link;
+    public $link = null;
 
     /**
      * int (*chmod) (const char *, mode_t);
      *
      * @var null|callable
      */
-    public $chmod;
+    public $chmod = null;
 
     /**
      * int (*chown) (const char *, uid_t, gid_t);
      *
      * @var null|callable
      */
-    public $chown;
+    public $chown = null;
 
     /**
      * int (*truncate) (const char *, off_t);
      *
      * @var null|callable
      */
-    public $truncate;
+    public $truncate = null;
 
     /**
      * int (*utime) (const char *, struct utimbuf *);
      *
      * @var null|callable
      */
-    public $utime;
+    public $utime = null;
 
     /**
      * int (*open) (const char *, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $open;
+    public $open = null;
 
     /**
      * int (*read) (const char *, char *, size_t, off_t, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $read;
+    public $read = null;
 
     /**
      * int (*write) (const char *, const char *, size_t, off_t, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $write;
+    public $write = null;
 
     /**
      * int (*statfs) (const char *, struct statvfs *);
      *
      * @var null|callable
      */
-    public $statfs;
+    public $statfs = null;
 
     /**
      * int (*flush) (const char *, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $flush;
+    public $flush = null;
 
     /**
      * int (*release) (const char *, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $release;
+    public $release = null;
 
     /**
      * int (*fsync) (const char *, int, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $fsync;
+    public $fsync = null;
 
     /**
      * int (*setxattr) (const char *, const char *, const char *, size_t, int);
      *
      * @var null|callable
      */
-    public $setxattr;
+    public $setxattr = null;
 
     /**
      * int (*getxattr) (const char *, const char *, char *, size_t);
      *
      * @var null|callable
      */
-    public $getxattr;
+    public $getxattr = null;
 
     /**
      * int (*listxattr) (const char *, char *, size_t);
      *
      * @var null|callable
      */
-    public $listxattr;
+    public $listxattr = null;
 
     /**
      * int (*removexattr) (const char *, const char *);
      *
      * @var null|callable
      */
-    public $removexattr;
+    public $removexattr = null;
 
     /**
      * int (*opendir) (const char *, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $opendir;
+    public $opendir = null;
 
     /**
      * int (*readdir) (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $readdir;
+    public $readdir = null;
 
     /**
      * int (*releasedir) (const char *, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $releasedir;
+    public $releasedir = null;
 
     /**
      * int (*fsyncdir) (const char *, int, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $fsyncdir;
+    public $fsyncdir = null;
 
     /**
      * void *(*init) (struct fuse_conn_info *conn);
      *
      * @var null|callable
      */
-    public $init;
+    public $init = null;
 
     /**
      * void (*destroy) (void *);
      *
      * @var null|callable
      */
-    public $destroy;
+    public $destroy = null;
 
     /**
      * int (*access) (const char *, int);
      *
      * @var null|callable
      */
-    public $access;
+    public $access = null;
 
     /**
      * int (*create) (const char *, mode_t, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $create;
+    public $create = null;
 
     /**
      * int (*ftruncate) (const char *, off_t, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $ftruncate;
+    public $ftruncate = null;
 
     /**
      * int (*fgetattr) (const char *, struct stat *, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $fgetattr;
+    public $fgetattr = null;
 
     /**
      * int (*lock) (const char *, struct fuse_file_info *, int cmd, struct flock *);
      *
      * @var null|callable
      */
-    public $lock;
+    public $lock = null;
 
     /**
      * int (*utimens) (const char *, const struct timespec tv[2]);
      *
      * @var null|callable
      */
-    public $utimens;
+    public $utimens = null;
 
     /**
      * int (*bmap) (const char *, size_t blocksize, uint64_t *idx);
      *
      * @var null|callable
      */
-    public $bmap;
+    public $bmap = null;
 
     /**
      * unsigned int flag_nullpath_ok:1;
@@ -299,42 +299,43 @@ final class FuseOperations
      *
      * @var null|callable
      */
-    public $ioctl;
+    public $ioctl = null;
 
     /**
      * int (*poll) (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp);
      *
      * @var null|callable
      */
-    public $poll;
+    public $poll = null;
 
     /**
      * int (*write_buf) (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $write_buf;
+    public $write_buf = null;
 
     /**
      * int (*read_buf) (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $read_buf;
+    public $read_buf = null;
 
     /**
      * int (*flock) (const char *, struct fuse_file_info *, int op);
      *
      * @var null|callable
      */
-    public $flock;
+    public $flock = null;
 
     /**
      * int (*fallocate) (const char *, int, off_t, off_t, struct fuse_file_info *);
      *
      * @var null|callable
      */
-    public $fallocate;
+    public $fallocate = null;
+
 
 
 

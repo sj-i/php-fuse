@@ -22,9 +22,9 @@ class Mounter
         $this->fuse = $fuse ?? Fuse::getInstance();
     }
 
-    public function mount(string $path, Mountable $mountable): int
+    public function mount(string $path, Mountable $mountable, array $args = null): int
     {
-        $args = [
+        $args ??= [
             '',
             '-s',
             '-f',

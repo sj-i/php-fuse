@@ -42,18 +42,11 @@ final class Fuse
         return self::$instance;
     }
 
-    public function main(int $argc, array $argv, CData $fuse_my_operations, ?CData $user_data): int
+    public function main(array $args, FuseOperations $fuse_operations, ?CData $user_data = null): int
     {
-        $typename = 'struct fuse_operations';
-        $type = Fuse::getInstance()->ffi->type(
-            $typename
-        );
-        $size = FFI::sizeof(
-            $type
-        );
-
-        $argv_real = FFI::new('char *[' . count($argv) . ']');
-        foreach ($argv as $key => $item) {
+        $argc = count($args);
+        $argv_real = FFI::new('char *[' . count($args) . ']');
+        foreach ($args as $key => $item) {
             $item_len = strlen($item);
             $item_len_nul = $item_len + 1;
             $argv_item = FFI::new("char[{$item_len_nul}]", false, true);
@@ -65,8 +58,8 @@ final class Fuse
         return Fuse::getInstance()->ffi->fuse_main_real(
             $argc,
             $argv_real,
-            FFI::addr($fuse_my_operations),
-            $size,
+            FFI::addr($fuse_operations->getCData()),
+            $fuse_operations->getSize(),
             null
         );
     }

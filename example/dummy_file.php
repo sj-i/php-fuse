@@ -4,6 +4,8 @@ include __DIR__ . "/../vendor/autoload.php";
 
 use FFI\CData;
 use Fuse\Fuse;
+use Fuse\FuseOperations;
+use Fuse\Mounter;
 
 const FILE_PATH = '/example';
 const FILE_NAME = 'example';
@@ -80,16 +82,11 @@ function read_cb(string $path, CData $buf, int $size, int $offset, CData $fi)
     return $size;
 }
 
+$fuse_operations = new FuseOperations();
+$fuse_operations->getattr = 'getattr_cb';
+$fuse_operations->open = 'open_cb';
+$fuse_operations->read = 'read_cb';
+$fuse_operations->readdir = 'readdir_cb';
 
-$fuse_my_operations = Fuse::getInstance()->ffi->new('struct fuse_operations');
-$fuse_my_operations->getattr = Closure::fromCallable('getattr_cb');
-$fuse_my_operations->open = Closure::fromCallable('open_cb');
-$fuse_my_operations->read = Closure::fromCallable('read_cb');
-$fuse_my_operations->readdir = Closure::fromCallable('readdir_cb');
-
-return Fuse::getInstance()->main(
-    $argc,
-    $argv,
-    $fuse_my_operations,
-    null
-);
+$mounter = new Mounter();
+return $mounter->mount('/tmp/example/', $fuse_operations);

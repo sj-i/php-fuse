@@ -16,6 +16,7 @@ namespace Fuse;
 use Closure;
 use FFI;
 use FFI\CData;
+use ReflectionClass;
 
 final class FuseOperations implements Mountable
 {
@@ -348,9 +349,29 @@ final class FuseOperations implements Mountable
             if (is_null($callable)) {
                 continue;
             }
+            if (substr_compare($name, 'flag_', 0, 5) === 0) {
+                continue;
+            }
+            if ($this->isDefault($callable)) {
+                continue;
+            }
             $fuse_operations->$name = Closure::fromCallable($callable);
         }
         return $this->cdata_cache = $fuse_operations;
+    }
+
+    private function isDefault(callable $callable): bool
+    {
+        if (!is_array($callable)) {
+            return false;
+        }
+        if (!is_object($callable[0])) {
+            return false;
+        }
+        $class = new ReflectionClass(get_class($callable[0]));
+        $method = $class->getMethod($callable[1]);
+        $trait = new ReflectionClass(FilesystemDefaultImplementationTrait::class);
+        return $method->getFileName() === $trait->getFileName();
     }
 
     public function getSize(): int

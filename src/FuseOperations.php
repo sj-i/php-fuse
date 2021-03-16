@@ -16,6 +16,7 @@ namespace Fuse;
 use Closure;
 use FFI;
 use FFI\CData;
+use Fuse\FFI\TypedCDataInterface;
 use ReflectionClass;
 
 final class FuseOperations implements Mountable
@@ -355,9 +356,46 @@ final class FuseOperations implements Mountable
             if ($this->isDefault($callable)) {
                 continue;
             }
-            $fuse_operations->$name = Closure::fromCallable($callable);
+            $fuse_operations->$name = $this->createWrapper($callable);
         }
         return $this->cdata_cache = $fuse_operations;
+    }
+
+    private function createWrapper(callable $callable): \Closure
+    {
+        if (!is_array($callable) or !is_object($callable[0])) {
+            return Closure::fromCallable($callable);
+        }
+        $class = new ReflectionClass(get_class($callable[0]));
+        $method = $class->getMethod($callable[1]);
+
+        $input_converters = [];
+        $outout_converters = [];
+        foreach ($method->getParameters() as $parameter) {
+            $class = $parameter->getClass();
+            if (!is_null($class) and $class->isSubclassOf(TypedCDataInterface::class)) {
+                $fromCData = $class->getMethod('fromCData');
+                $input_converters[] = fn ($cdata) => $fromCData->invoke(null, $cdata);
+                $outout_converters[] = function ($typed_c_data, CData $toCData): CData {
+                    return $typed_c_data->toCData($toCData);
+                };
+            } else {
+                $input_converters[] = fn ($cdata) => $cdata;
+                $outout_converters[] = fn ($typed_c_data, $cdata) => $typed_c_data;
+            }
+        }
+
+        return function (...$args) use ($input_converters, $outout_converters, $callable) {
+            $new_args = [];
+            foreach ($input_converters as $key => $converter) {
+                $new_args[$key] = $converter($args[$key]);
+            }
+            $result = $callable(...$new_args);
+            foreach ($outout_converters as $key => $converter) {
+                $args[$key] = $converter($new_args[$key], $args[$key]);
+            }
+            return $result;
+        };
     }
 
     private function isDefault(callable $callable): bool

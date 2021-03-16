@@ -6,6 +6,8 @@ use FFI\CData;
 use Fuse\FilesystemDefaultImplementationTrait;
 use Fuse\FilesystemInterface;
 use Fuse\Fuse;
+use Fuse\Libc\Fuse\FuseFileInfo;
+use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Mounter;
 
 const FILE_PATH = '/example';
@@ -20,18 +22,10 @@ class DummyFs implements FilesystemInterface
 {
     use FilesystemDefaultImplementationTrait;
 
-    public function getattr(string $path, \FFI\CData $stbuf): int
+    public function getattr(string $path, Stat $stbuf): int
     {
-        $typename = 'struct stat';
-        $type = Fuse::getInstance()->ffi->type(
-            $typename
-        );
-        $size = FFI::sizeof(
-            $type
-        );
         echo "attr read {$path}" . PHP_EOL;
 
-        FFI::memset($stbuf, 0, $size);
         if ($path === '/') {
             $stbuf->st_mode = S_IFDIR | 0755;
             $stbuf->st_nlink = 2;
@@ -52,7 +46,7 @@ class DummyFs implements FilesystemInterface
         return -ENOENT;
     }
 
-    public function readdir(string $path, CData $buf, CData $filler, int $offset, CData $fi): int
+    public function readdir(string $path, CData $buf, CData $filler, int $offset, FuseFileInfo $fi): int
     {
         $filler($buf, '.', null, 0);
         $filler($buf, '..', null, 0);
@@ -61,17 +55,12 @@ class DummyFs implements FilesystemInterface
         return 0;
     }
 
-    public function open(string $path, CData $fi): int
+    public function open(string $path, FuseFileInfo $fuse_file_info): int
     {
-        if ($path !== FILE_PATH) {
-            return -ENOENT;
-        }
-
-        echo "open {$path}" . PHP_EOL;
         return 0;
     }
 
-    public function read(string $path, CData $buf, int $size, int $offset, CData $fi): int
+    public function read(string $path, CData $buf, int $size, int $offset, FuseFileInfo $fi): int
     {
         echo "read {$path}" . PHP_EOL;
 

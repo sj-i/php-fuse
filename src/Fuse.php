@@ -60,7 +60,7 @@ final class Fuse
             $argv_real,
             FFI::addr($fuse_operations->getCData()),
             $fuse_operations->getSize(),
-            null
+            $user_data
         );
     }
 }

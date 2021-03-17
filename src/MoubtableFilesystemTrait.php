@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Fuse;
 
 use FFI\CData;
+use Fuse\Libc\Fuse\FuseDirHandle;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Sys\Stat\Stat;
 
@@ -90,7 +91,7 @@ trait MoubtableFilesystemTrait
      * @psalm-param callable(CData $dirhandle, string $name, int $type, int $ino):int $dirfill
      * @deprecated
      */
-    abstract public function getdir(string $path, CData $dirhandle, callable $dirfill): int;
+    abstract public function getdir(string $path, FuseDirHandle $dirhandle, callable $dirfill): int;
 
     /**
      * int (*mknod) (const char *, mode_t, dev_t);

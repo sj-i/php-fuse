@@ -251,7 +251,7 @@ trait MoubtableFilesystemTrait
     /**
      * int (*fgetattr) (const char *, struct stat *, struct fuse_file_info *);
      */
-    abstract public function fgetattr(string $path, CData $stat, FuseFileInfo $fuse_file_info): int;
+    abstract public function fgetattr(string $path, Stat $stat, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*lock) (const char *, struct fuse_file_info *, int cmd, struct flock *);

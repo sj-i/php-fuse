@@ -15,6 +15,7 @@ namespace Fuse;
 
 use FFI\CData;
 use Fuse\Libc\Fuse\FuseConnInfo;
+use Fuse\Libc\Fuse\FuseDirFill;
 use Fuse\Libc\Fuse\FuseDirHandle;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FusePollHandle;
@@ -45,10 +46,9 @@ trait FilesystemDefaultImplementationTrait
     /**
      * int (*getdir) (const char *, fuse_dirh_t, fuse_dirfil_t);
      *
-     * @psalm-param callable(CData $dirhandle, string $name, int $type, int $ino):int $dirfill
      * @deprecated
      */
-    public function getdir(string $path, FuseDirHandle $dirhandle, callable $dirfill): int
+    public function getdir(string $path, FuseDirHandle $dirhandle, FuseDirFill $dirfill): int
     {
         throw new FuseLogicException('not implemented');
     }

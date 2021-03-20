@@ -16,6 +16,7 @@ namespace Fuse;
 use FFI\CData;
 use Fuse\Libc\Fuse\FuseDirHandle;
 use Fuse\Libc\Fuse\FuseFileInfo;
+use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Sys\Stat\Stat;
 
 interface FilesystemInterface extends Mountable
@@ -238,7 +239,7 @@ interface FilesystemInterface extends Mountable
     /**
      * int (*poll) (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp);
      */
-    public function poll(string $path, FuseFileInfo $fuse_file_info, CData $fuse_pollhandle, int &$reventsp): int;
+    public function poll(string $path, FuseFileInfo $fuse_file_info, FusePollHandle $fuse_pollhandle, int &$reventsp): int;
 
     /**
      * int (*write_buf) (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *);

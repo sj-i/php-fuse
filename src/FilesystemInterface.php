@@ -19,6 +19,7 @@ use Fuse\Libc\Fuse\FuseDirHandle;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Sys\Stat\Stat;
+use Fuse\Libc\Sys\StatVfs\StatVfs;
 
 interface FilesystemInterface extends Mountable
 {
@@ -113,7 +114,7 @@ interface FilesystemInterface extends Mountable
     /**
      * int (*statfs) (const char *, struct statvfs *);
      */
-    public function statfs(string $path, CData $statvfs): int;
+    public function statfs(string $path, StatVfs $statvfs): int;
 
     /**
      * int (*flush) (const char *, struct fuse_file_info *);

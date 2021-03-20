@@ -19,6 +19,7 @@ use Fuse\Libc\Fuse\FuseDirHandle;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Sys\Stat\Stat;
+use Fuse\Libc\Sys\StatVfs\StatVfs;
 
 trait FilesystemDefaultImplementationTrait
 {
@@ -166,7 +167,7 @@ trait FilesystemDefaultImplementationTrait
     /**
      * int (*statfs) (const char *, struct statvfs *);
      */
-    public function statfs(string $path, CData $statvfs): int
+    public function statfs(string $path, StatVfs $statvfs): int
     {
         throw new FuseLogicException('not implemented');
     }

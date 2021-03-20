@@ -19,6 +19,7 @@ use Fuse\Libc\Fuse\FuseDirHandle;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Sys\Stat\Stat;
+use Fuse\Libc\Sys\StatVfs\StatVfs;
 
 trait MoubtableFilesystemTrait
 {
@@ -168,7 +169,7 @@ trait MoubtableFilesystemTrait
     /**
      * int (*statfs) (const char *, struct statvfs *);
      */
-    abstract public function statfs(string $path, CData $statvfs): int;
+    abstract public function statfs(string $path, StatVfs $statvfs): int;
 
     /**
      * int (*flush) (const char *, struct fuse_file_info *);

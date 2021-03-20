@@ -20,5 +20,6 @@ interface TypedCDataInterface
     /** @return static */
     public static function fromCData(CData $cdata): self;
     public static function getCTypeName(): string;
-    public function toCData(?CData $cdata): CData;
+    public function toCData(CData $cdata): CData;
+    public static function newCData(): CData;
 }

@@ -38,19 +38,8 @@ trait TypedCDataDefaultImplementationTrait
 
     abstract public static function getCTypeName(): string;
 
-    public function toCData(?CData $cdata): CData
+    public function toCData(CData $cdata): CData
     {
-        if (is_null($cdata)) {
-            $typename = $this->getCTypeName();
-            $cdata = FFI::new($typename);
-            $type = Fuse::getInstance()->ffi->type(
-                $typename
-            );
-            $size = FFI::sizeof(
-                $type
-            );
-            FFI::memset($cdata, 0, $size);
-        }
         foreach ($this as $key => $value) {
             if (is_a($value, TypedCDataInterface::class, true)) {
                 $cdata->$key = $value->toCData($cdata->$key);
@@ -58,6 +47,20 @@ trait TypedCDataDefaultImplementationTrait
                 $cdata->$key = $this->$key;
             }
         }
+        return $cdata;
+    }
+
+    public static function newCData(): CData
+    {
+        $typename = static::getCTypeName();
+        $cdata = FFI::new($typename);
+        $type = Fuse::getInstance()->ffi->type(
+            $typename
+        );
+        $size = FFI::sizeof(
+            $type
+        );
+        FFI::memset($cdata, 0, $size);
         return $cdata;
     }
 }

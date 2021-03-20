@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Fuse;
 
 use FFI\CData;
+use Fuse\Libc\Fuse\FuseConnInfo;
 use Fuse\Libc\Fuse\FuseDirHandle;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FusePollHandle;
@@ -227,7 +228,7 @@ trait MoubtableFilesystemTrait
     /**
      * void *(*init) (struct fuse_conn_info *conn);
      */
-    abstract public function init(CData $conn): ?CData;
+    abstract public function init(FuseConnInfo $conn): ?CData;
 
     /**
      * void (*destroy) (void *);

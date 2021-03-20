@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Fuse;
 
 use FFI\CData;
+use Fuse\Libc\Fuse\FuseConnInfo;
 use Fuse\Libc\Fuse\FuseDirHandle;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FusePollHandle;
@@ -261,7 +262,7 @@ trait FilesystemDefaultImplementationTrait
     /**
      * void *(*init) (struct fuse_conn_info *conn);
      */
-    public function init(CData $conn): ?CData
+    public function init(FuseConnInfo $conn): ?CData
     {
         throw new FuseLogicException('not implemented');
     }

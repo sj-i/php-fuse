@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Fuse;
 
 use FFI\CData;
+use Fuse\Libc\Fcntl\Flock;
 use Fuse\Libc\Fuse\FuseConnInfo;
 use Fuse\Libc\Fuse\FuseDirFill;
 use Fuse\Libc\Fuse\FuseDirHandle;
@@ -208,7 +209,7 @@ interface FilesystemInterface extends Mountable
     /**
      * int (*lock) (const char *, struct fuse_file_info *, int cmd, struct flock *);
      */
-    public function lock(string $path, FuseFileInfo $fuse_file_info, int $cmd, CData $flock): int;
+    public function lock(string $path, FuseFileInfo $fuse_file_info, int $cmd, Flock $flock): int;
 
     /**
      * int (*utimens) (const char *, const struct timespec tv[2]);

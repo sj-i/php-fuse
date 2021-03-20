@@ -20,6 +20,7 @@ use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
+use Fuse\Libc\Utime\UtimBuf;
 
 interface FilesystemInterface extends Mountable
 {
@@ -94,7 +95,7 @@ interface FilesystemInterface extends Mountable
     /**
      * int (*utime) (const char *, struct utimbuf *);
      */
-    public function utime(string $path, CData $utime_buf): int;
+    public function utime(string $path, UtimBuf $utime_buf): int;
 
     /**
      * int (*open) (const char *, struct fuse_file_info *);

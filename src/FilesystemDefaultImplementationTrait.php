@@ -20,6 +20,7 @@ use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
+use Fuse\Libc\Utime\UtimBuf;
 
 trait FilesystemDefaultImplementationTrait
 {
@@ -135,7 +136,7 @@ trait FilesystemDefaultImplementationTrait
     /**
      * int (*utime) (const char *, struct utimbuf *);
      */
-    public function utime(string $path, CData $utime_buf): int
+    public function utime(string $path, UtimBuf $utime_buf): int
     {
         throw new FuseLogicException('not implemented');
     }

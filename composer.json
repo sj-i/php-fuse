@@ -22,6 +22,7 @@
   },
   "require": {
     "php": "^7.4|^8.0",
-    "ext-ffi": "*"
+    "ext-ffi": "*",
+    "sj-i/phpdoc-type-reader": "0.0.2"
   }
 }

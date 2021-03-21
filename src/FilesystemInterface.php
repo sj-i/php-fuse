@@ -15,6 +15,7 @@ namespace Fuse;
 
 use FFI\CData;
 use Fuse\Libc\Fcntl\Flock;
+use Fuse\Libc\Fuse\FuseBufVec;
 use Fuse\Libc\Fuse\FuseConnInfo;
 use Fuse\Libc\Fuse\FuseDirFill;
 use Fuse\Libc\Fuse\FuseDirHandle;
@@ -247,12 +248,12 @@ interface FilesystemInterface extends Mountable
     /**
      * int (*write_buf) (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *);
      */
-    public function writeBuf(string $path, CData $buf, int $offset, FuseFileInfo $fuse_file_info): int;
+    public function writeBuf(string $path, FuseBufVec $buf, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*read_buf) (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *);
      */
-    public function readBuf(string $path, CData $bufp, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
+    public function readBuf(string $path, FuseBufVec $bufp, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*flock) (const char *, struct fuse_file_info *, int op);

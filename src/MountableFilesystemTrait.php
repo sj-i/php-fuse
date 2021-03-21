@@ -15,6 +15,7 @@ namespace Fuse;
 
 use FFI\CData;
 use Fuse\Libc\Fcntl\Flock;
+use Fuse\Libc\Fuse\FuseBufVec;
 use Fuse\Libc\Fuse\FuseConnInfo;
 use Fuse\Libc\Fuse\FuseDirFill;
 use Fuse\Libc\Fuse\FuseDirHandle;

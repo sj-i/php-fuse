@@ -24,6 +24,7 @@ use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FuseFillDir;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Fuse\FusePrivateData;
+use Fuse\Libc\Fuse\FuseReadDirBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
 use Fuse\Libc\Time\TimeSpec;
@@ -168,7 +169,7 @@ interface FilesystemInterface extends Mountable
      *
      * @psalm-param callable(CData $buf, string $name, Stat $stbuf, int $off):int $filler
      */
-    public function readdir(string $path, CData $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fuse_file_info): int;
+    public function readdir(string $path, FuseReadDirBuffer $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*releasedir) (const char *, struct fuse_file_info *);

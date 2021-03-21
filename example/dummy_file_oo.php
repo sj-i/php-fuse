@@ -8,6 +8,7 @@ use Fuse\FilesystemInterface;
 use Fuse\Fuse;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FuseFillDir;
+use Fuse\Libc\Fuse\FuseReadDirBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Mounter;
 
@@ -47,7 +48,7 @@ class DummyFs implements FilesystemInterface
         return -ENOENT;
     }
 
-    public function readdir(string $path, CData $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fi): int
+    public function readdir(string $path, FuseReadDirBuffer $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fi): int
     {
         $filler($buf, '.', null, 0);
         $filler($buf, '..', null, 0);

@@ -25,9 +25,12 @@ final class FuseFillDir implements TypedCDataInterface
     /** @var callable(CData $dirhandle, string $name, int $type, int $ino):int */
     private CData $cdata;
 
-    public function __invoke(CData $buf, string $name, Stat $stbuf, int $off): int
+    public function __invoke(FuseReadDirBuffer $buf, string $name, ?Stat $stbuf, int $off): int
     {
-        return ($this->cdata)($buf, $name, $stbuf, $off);
+        if (!is_null($stbuf)) {
+            $stbuf = $stbuf->toCData($stbuf->newCData());
+        }
+        return ($this->cdata)($buf->toCData(null), $name, $stbuf, $off);
     }
 
     public static function getCTypeName(): string

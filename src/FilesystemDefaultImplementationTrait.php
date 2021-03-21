@@ -24,6 +24,7 @@ use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FuseFillDir;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Fuse\FusePrivateData;
+use Fuse\Libc\Fuse\FuseReadDirBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
 use Fuse\Libc\Time\TimeSpec;
@@ -246,7 +247,7 @@ trait FilesystemDefaultImplementationTrait
     /**
      * int (*readdir) (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_info *);
      */
-    public function readdir(string $path, CData $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fuse_file_info): int
+    public function readdir(string $path, FuseReadDirBuffer $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fuse_file_info): int
     {
         throw new FuseLogicException('not implemented');
     }

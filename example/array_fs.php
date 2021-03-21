@@ -17,6 +17,7 @@ use Fuse\FilesystemInterface;
 use Fuse\Fuse;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FuseFillDir;
+use Fuse\Libc\Fuse\FuseReadDirBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Mounter;
 
@@ -146,7 +147,7 @@ class ArrayFs implements FilesystemInterface
         });
     }
 
-    public function readdir(string $path, CData $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fi): int
+    public function readdir(string $path, FuseReadDirBuffer $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fi): int
     {
         $filler($buf, '.', null, 0);
         $filler($buf, '..', null, 0);
@@ -162,7 +163,7 @@ class ArrayFs implements FilesystemInterface
         return 0;
     }
 
-    public function open(string $path, FuseFileInfo $fi): int
+    public function open(string $path, FuseFileInfo $fuse_file_info): int
     {
         $entry = $this->getEntry($path);
         if (!is_scalar($entry)) {
@@ -173,7 +174,7 @@ class ArrayFs implements FilesystemInterface
         return 0;
     }
 
-    public function read(string $path, CData $buf, int $size, int $offset, FuseFileInfo $fi): int
+    public function read(string $path, CData $buf, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
         $entry = $this->getEntry($path);
 

@@ -63,6 +63,9 @@ final class TypedCDataWrapper
             foreach ($outout_converters as $key => $converter) {
                 $args[$key] = $converter($new_args[$key], $args[$key]);
             }
+            if ($result instanceof TypedCDataInterface) {
+                $result = $result->newCData();
+            }
             return $result;
         };
     }

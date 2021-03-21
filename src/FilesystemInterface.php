@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Fuse;
 
 use FFI\CData;
+use Fuse\FFI\TypedCDataArray;
 use Fuse\Libc\Fcntl\Flock;
 use Fuse\Libc\Fuse\FuseBufVec;
 use Fuse\Libc\Fuse\FuseConnInfo;
@@ -22,8 +23,10 @@ use Fuse\Libc\Fuse\FuseDirHandle;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FuseFillDir;
 use Fuse\Libc\Fuse\FusePollHandle;
+use Fuse\Libc\Fuse\FusePrivateData;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
+use Fuse\Libc\Time\TimeSpec;
 use Fuse\Libc\Utime\UtimBuf;
 
 interface FilesystemInterface extends Mountable
@@ -180,12 +183,12 @@ interface FilesystemInterface extends Mountable
     /**
      * void *(*init) (struct fuse_conn_info *conn);
      */
-    public function init(FuseConnInfo $conn): ?CData;
+    public function init(FuseConnInfo $conn): ?FusePrivateData;
 
     /**
      * void (*destroy) (void *);
      */
-    public function destroy(CData $private_data): void;
+    public function destroy(FusePrivateData $private_data): void;
 
     /**
      * int (*access) (const char *, int);
@@ -214,8 +217,10 @@ interface FilesystemInterface extends Mountable
 
     /**
      * int (*utimens) (const char *, const struct timespec tv[2]);
+     *
+     * @param TypedCDataArray<TimeSpec> $tv
      */
-    public function utimens(string $path, CData $tv): int;
+    public function utimens(string $path, TypedCDataArray $tv): int;
 
     /**
      * int (*bmap) (const char *, size_t blocksize, uint64_t *idx);

@@ -27,7 +27,7 @@ use Fuse\Libc\Utime\UtimBuf;
 
 trait FilesystemDefaultImplementationTrait
 {
-    use MoubtableFilesystemTrait;
+    use MountableFilesystemTrait;
 
     /**
      * int (*getattr) (const char *, struct stat *);

@@ -25,7 +25,7 @@ use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
 use Fuse\Libc\Utime\UtimBuf;
 
-trait MoubtableFilesystemTrait
+trait MountableFilesystemTrait
 {
     public function getOperations(): FuseOperations
     {
@@ -300,12 +300,12 @@ trait MoubtableFilesystemTrait
     /**
      * int (*write_buf) (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *);
      */
-    abstract public function writeBuf(string $path, CData $buf, int $offset, FuseFileInfo $fuse_file_info): int;
+    abstract public function writeBuf(string $path, FuseBufVec $buf, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*read_buf) (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *);
      */
-    abstract public function readBuf(string $path, CData $bufp, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
+    abstract public function readBuf(string $path, FuseBufVec $bufp, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*flock) (const char *, struct fuse_file_info *, int op);

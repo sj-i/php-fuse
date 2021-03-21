@@ -23,6 +23,9 @@
   "require": {
     "php": "^7.4|^8.0",
     "ext-ffi": "*",
-    "sj-i/phpdoc-type-reader": "0.0.2"
+    "sj-i/phpdoc-type-reader": "0.0.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "10.0.x-dev"
   }
 }

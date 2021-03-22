@@ -22,6 +22,8 @@ use Fuse\Libc\Fuse\FuseDirFill;
 use Fuse\Libc\Fuse\FuseDirHandle;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FuseFillDir;
+use Fuse\Libc\Fuse\FuseIoctlArgPointer;
+use Fuse\Libc\Fuse\FuseIoctlDataPointer;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Fuse\FusePrivateData;
 use Fuse\Libc\Fuse\FuseReadDirBuffer;
@@ -386,8 +388,14 @@ trait FilesystemDefaultImplementationTrait
     /**
      * int (*ioctl) (const char *, int cmd, void *arg, struct fuse_file_info *, unsigned int flags, void *data);
      */
-    public function ioctl(string $path, int $cmd, CData $arg, FuseFileInfo $fuse_file_info, int $flags, CData $data): int
-    {
+    public function ioctl(
+        string $path,
+        int $cmd,
+        FuseIoctlArgPointer $arg,
+        FuseFileInfo $fuse_file_info,
+        int $flags,
+        FuseIoctlDataPointer $data
+    ): int {
         throw new FuseLogicException('not implemented');
     }
 

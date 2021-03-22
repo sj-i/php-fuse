@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Fuse;
 
-use FFI\CData;
 use Fuse\FFI\TypedCDataArray;
 use Fuse\Libc\Fcntl\Flock;
 use Fuse\Libc\Fuse\FuseBufVec;
@@ -341,7 +340,7 @@ trait FilesystemDefaultImplementationTrait
     /**
      * int (*bmap) (const char *, size_t blocksize, uint64_t *idx);
      */
-    public function bmap(string $path, int $blocksize, CData $idx): int
+    public function bmap(string $path, int $blocksize, int &$idx): int
     {
         throw new FuseLogicException('not implemented');
     }

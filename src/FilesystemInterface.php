@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Fuse;
 
-use FFI\CData;
 use Fuse\FFI\TypedCDataArray;
 use Fuse\Libc\Fcntl\Flock;
 use Fuse\Libc\Fuse\FuseBufVec;
@@ -230,7 +229,7 @@ interface FilesystemInterface extends Mountable
     /**
      * int (*bmap) (const char *, size_t blocksize, uint64_t *idx);
      */
-    public function bmap(string $path, int $blocksize, CData $idx): int;
+    public function bmap(string $path, int $blocksize, int &$idx): int;
 
     /**
      * unsigned int flag_nullpath_ok:1;

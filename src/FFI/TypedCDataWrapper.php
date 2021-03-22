@@ -48,6 +48,9 @@ final class TypedCDataWrapper
                 $outout_converters[] = function ($typed_c_data_array, CData $toCData): CData {
                     return $typed_c_data_array->toCData($toCData);
                 };
+            } elseif ($parameter->isPassedByReference()) {
+                $input_converters[] = fn($cdata) => $cdata[0];
+                $outout_converters[] = fn($value, CData $toCData) => $toCData[0] = $value;
             } else {
                 $input_converters[] = fn ($cdata) => $cdata;
                 $outout_converters[] = fn ($typed_c_data, $cdata) => $typed_c_data;

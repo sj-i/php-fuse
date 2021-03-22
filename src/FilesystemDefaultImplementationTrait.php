@@ -27,6 +27,7 @@ use Fuse\Libc\Fuse\FuseIoctlDataPointer;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Fuse\FusePrivateData;
 use Fuse\Libc\Fuse\FuseReadDirBuffer;
+use Fuse\Libc\String\CStringBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
 use Fuse\Libc\Time\TimeSpec;
@@ -47,7 +48,7 @@ trait FilesystemDefaultImplementationTrait
     /**
      * int (*readlink) (const char *, char *, size_t);
      */
-    public function readlink(string $path, CData $buffer, int $size): int
+    public function readlink(string $path, CStringBuffer $buffer, int $size): int
     {
         throw new FuseLogicException('not implemented');
     }

@@ -27,6 +27,7 @@ use Fuse\Libc\Fuse\FuseIoctlDataPointer;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Fuse\FusePrivateData;
 use Fuse\Libc\Fuse\FuseReadDirBuffer;
+use Fuse\Libc\String\CStringBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
 use Fuse\Libc\Time\TimeSpec;
@@ -97,7 +98,7 @@ trait MountableFilesystemTrait
     /**
      * int (*readlink) (const char *, char *, size_t);
      */
-    abstract public function readlink(string $path, CData $buffer, int $size): int;
+    abstract public function readlink(string $path, CStringBuffer $buffer, int $size): int;
 
     /**
      * int (*getdir) (const char *, fuse_dirh_t, fuse_dirfil_t);

@@ -18,6 +18,7 @@ use Fuse\Fuse;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FuseFillDir;
 use Fuse\Libc\Fuse\FuseReadDirBuffer;
+use Fuse\Libc\String\CBytesBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Mounter;
 
@@ -174,7 +175,7 @@ class ArrayFs implements FilesystemInterface
         return 0;
     }
 
-    public function read(string $path, CData $buf, int $size, int $offset, FuseFileInfo $fuse_file_info): int
+    public function read(string $path, CBytesBuffer $buf, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
         $entry = $this->getEntry($path);
 
@@ -187,7 +188,7 @@ class ArrayFs implements FilesystemInterface
         }
 
         $content = substr((string)$entry, $offset, $size);
-        FFI::memcpy($buf, $content, $size);
+        $buf->write($content, $size);
 
         return $size;
     }

@@ -27,6 +27,7 @@ use Fuse\Libc\Fuse\FuseIoctlDataPointer;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Fuse\FusePrivateData;
 use Fuse\Libc\Fuse\FuseReadDirBuffer;
+use Fuse\Libc\String\CBytesBuffer;
 use Fuse\Libc\String\CStringBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
@@ -162,7 +163,7 @@ trait FilesystemDefaultImplementationTrait
     /**
      * int (*read) (const char *, char *, size_t, off_t, struct fuse_file_info *);
      */
-    public function read(string $path, CData $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
+    public function read(string $path, CBytesBuffer $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
         throw new FuseLogicException('not implemented');
     }

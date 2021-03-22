@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Fuse;
 
-use FFI\CData;
 use Fuse\FFI\TypedCDataArray;
 use Fuse\Libc\Fcntl\Flock;
 use Fuse\Libc\Fuse\FuseBufVec;
@@ -27,6 +26,7 @@ use Fuse\Libc\Fuse\FuseIoctlDataPointer;
 use Fuse\Libc\Fuse\FusePollHandle;
 use Fuse\Libc\Fuse\FusePrivateData;
 use Fuse\Libc\Fuse\FuseReadDirBuffer;
+use Fuse\Libc\String\CBytesBuffer;
 use Fuse\Libc\String\CStringBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
@@ -170,7 +170,7 @@ trait MountableFilesystemTrait
     /**
      * int (*read) (const char *, char *, size_t, off_t, struct fuse_file_info *);
      */
-    abstract public function read(string $path, CData $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
+    abstract public function read(string $path, CBytesBuffer $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*write) (const char *, const char *, size_t, off_t, struct fuse_file_info *);

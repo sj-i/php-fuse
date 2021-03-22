@@ -9,6 +9,7 @@ use Fuse\Fuse;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FuseFillDir;
 use Fuse\Libc\Fuse\FuseReadDirBuffer;
+use Fuse\Libc\String\CBytesBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Mounter;
 
@@ -62,7 +63,7 @@ class DummyFs implements FilesystemInterface
         return 0;
     }
 
-    public function read(string $path, CData $buf, int $size, int $offset, FuseFileInfo $fi): int
+    public function read(string $path, CBytesBuffer $buf, int $size, int $offset, FuseFileInfo $fi): int
     {
         echo "read {$path}" . PHP_EOL;
 
@@ -73,7 +74,7 @@ class DummyFs implements FilesystemInterface
         }
 
         $content = substr(FILE_CONTENT, $offset, $size);
-        FFI::memcpy($buf, $content, $size);
+        $buf->write($content, $size);
 
         return $size;
     }

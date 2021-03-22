@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Fuse;
 
-use Closure;
 use FFI;
 use FFI\CData;
+use Fuse\FFI\TypedCDataWrapper;
 use ReflectionClass;
 
 final class FuseOperations implements Mountable
@@ -345,6 +345,7 @@ final class FuseOperations implements Mountable
     public function getCData(): CData
     {
         $fuse_operations = Fuse::getInstance()->ffi->new('struct fuse_operations');
+        $typed_cdata_wrapper = new TypedCDataWrapper();
         foreach ($this as $name => $callable) {
             if (is_null($callable)) {
                 continue;
@@ -355,7 +356,7 @@ final class FuseOperations implements Mountable
             if ($this->isDefault($callable)) {
                 continue;
             }
-            $fuse_operations->$name = Closure::fromCallable($callable);
+            $fuse_operations->$name = $typed_cdata_wrapper->createWrapper($callable);
         }
         return $this->cdata_cache = $fuse_operations;
     }

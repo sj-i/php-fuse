@@ -13,9 +13,27 @@ declare(strict_types=1);
 
 namespace Fuse;
 
-use FFI\CData;
+use Fuse\FFI\TypedCDataArray;
+use Fuse\Libc\Fcntl\Flock;
+use Fuse\Libc\Fuse\FuseBufVec;
+use Fuse\Libc\Fuse\FuseConnInfo;
+use Fuse\Libc\Fuse\FuseDirFill;
+use Fuse\Libc\Fuse\FuseDirHandle;
+use Fuse\Libc\Fuse\FuseFileInfo;
+use Fuse\Libc\Fuse\FuseFillDir;
+use Fuse\Libc\Fuse\FuseIoctlArgPointer;
+use Fuse\Libc\Fuse\FuseIoctlDataPointer;
+use Fuse\Libc\Fuse\FusePollHandle;
+use Fuse\Libc\Fuse\FusePrivateData;
+use Fuse\Libc\Fuse\FuseReadDirBuffer;
+use Fuse\Libc\String\CBytesBuffer;
+use Fuse\Libc\String\CStringBuffer;
+use Fuse\Libc\Sys\Stat\Stat;
+use Fuse\Libc\Sys\StatVfs\StatVfs;
+use Fuse\Libc\Time\TimeSpec;
+use Fuse\Libc\Utime\UtimBuf;
 
-trait MoubtableFilesystemTrait
+trait MountableFilesystemTrait
 {
     public function getOperations(): FuseOperations
     {
@@ -75,20 +93,19 @@ trait MoubtableFilesystemTrait
     /**
      * int (*getattr) (const char *, struct stat *);
      */
-    abstract public function getattr(string $path, CData $stat): int;
+    abstract public function getattr(string $path, Stat $stat): int;
 
     /**
      * int (*readlink) (const char *, char *, size_t);
      */
-    abstract public function readlink(string $path, CData $buffer, int $size): int;
+    abstract public function readlink(string $path, CStringBuffer $buffer, int $size): int;
 
     /**
      * int (*getdir) (const char *, fuse_dirh_t, fuse_dirfil_t);
      *
-     * @psalm-param callable(CData $dirhandle, string $name, int $type, int $ino):int $dirfill
      * @deprecated
      */
-    abstract public function getdir(string $path, CData $dirhandle, callable $dirfill): int;
+    abstract public function getdir(string $path, FuseDirHandle $dirhandle, FuseDirFill $dirfill): int;
 
     /**
      * int (*mknod) (const char *, mode_t, dev_t);
@@ -143,42 +160,42 @@ trait MoubtableFilesystemTrait
     /**
      * int (*utime) (const char *, struct utimbuf *);
      */
-    abstract public function utime(string $path, CData $utime_buf): int;
+    abstract public function utime(string $path, UtimBuf $utime_buf): int;
 
     /**
      * int (*open) (const char *, struct fuse_file_info *);
      */
-    abstract public function open(string $path, CData $fuse_file_info): int;
+    abstract public function open(string $path, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*read) (const char *, char *, size_t, off_t, struct fuse_file_info *);
      */
-    abstract public function read(string $path, CData $buffer, int $size, int $offset, CData $fuse_file_info): int;
+    abstract public function read(string $path, CBytesBuffer $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*write) (const char *, const char *, size_t, off_t, struct fuse_file_info *);
      */
-    abstract public function write(string $path, string $buffer, int $size, int $offset, CData $fuse_file_info): int;
+    abstract public function write(string $path, string $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*statfs) (const char *, struct statvfs *);
      */
-    abstract public function statfs(string $path, CData $statvfs): int;
+    abstract public function statfs(string $path, StatVfs $statvfs): int;
 
     /**
      * int (*flush) (const char *, struct fuse_file_info *);
      */
-    abstract public function flush(string $path, CData $fuse_file_info): int;
+    abstract public function flush(string $path, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*release) (const char *, struct fuse_file_info *);
      */
-    abstract public function release(string $path, CData $fuse_file_info): int;
+    abstract public function release(string $path, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*fsync) (const char *, int, struct fuse_file_info *);
      */
-    abstract public function fsync(string $path, int $flags, CData $fuse_file_info): int;
+    abstract public function fsync(string $path, int $flags, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*setxattr) (const char *, const char *, const char *, size_t, int);
@@ -203,32 +220,32 @@ trait MoubtableFilesystemTrait
     /**
      * int (*opendir) (const char *, struct fuse_file_info *);
      */
-    abstract public function opendir(string $path, CData $fuse_file_info): int;
+    abstract public function opendir(string $path, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*readdir) (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_info *);
      */
-    abstract public function readdir(string $path, CData $buf, CData $filler, int $offset, CData $fuse_file_info): int;
+    abstract public function readdir(string $path, FuseReadDirBuffer $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*releasedir) (const char *, struct fuse_file_info *);
      */
-    abstract public function releasedir(string $path, CData $fuse_file_info): int;
+    abstract public function releasedir(string $path, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*fsyncdir) (const char *, int, struct fuse_file_info *);
      */
-    abstract public function fsyncdir(string $path, CData $fuse_file_info): int;
+    abstract public function fsyncdir(string $path, FuseFileInfo $fuse_file_info): int;
 
     /**
      * void *(*init) (struct fuse_conn_info *conn);
      */
-    abstract public function init(CData $conn): ?CData;
+    abstract public function init(FuseConnInfo $conn): ?FusePrivateData;
 
     /**
      * void (*destroy) (void *);
      */
-    abstract public function destroy(CData $private_data): void;
+    abstract public function destroy(FusePrivateData $private_data): void;
 
     /**
      * int (*access) (const char *, int);
@@ -238,32 +255,34 @@ trait MoubtableFilesystemTrait
     /**
      * int (*create) (const char *, mode_t, struct fuse_file_info *);
      */
-    abstract public function create(string $path, int $mode, CData $fuse_file_info): int;
+    abstract public function create(string $path, int $mode, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*ftruncate) (const char *, off_t, struct fuse_file_info *);
      */
-    abstract public function ftruncate(string $path, int $offset, CData $fuse_file_info): int;
+    abstract public function ftruncate(string $path, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*fgetattr) (const char *, struct stat *, struct fuse_file_info *);
      */
-    abstract public function fgetattr(string $path, CData $stat, CData $fuse_file_info): int;
+    abstract public function fgetattr(string $path, Stat $stat, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*lock) (const char *, struct fuse_file_info *, int cmd, struct flock *);
      */
-    abstract public function lock(string $path, CData $fuse_file_info, int $cmd, CData $flock): int;
+    abstract public function lock(string $path, FuseFileInfo $fuse_file_info, int $cmd, Flock $flock): int;
 
     /**
      * int (*utimens) (const char *, const struct timespec tv[2]);
+     *
+     * @param TypedCDataArray<TimeSpec> $tv
      */
-    abstract public function utimens(string $path, CData $tv): int;
+    abstract public function utimens(string $path, TypedCDataArray $tv): int;
 
     /**
      * int (*bmap) (const char *, size_t blocksize, uint64_t *idx);
      */
-    abstract public function bmap(string $path, int $blocksize, CData $idx): int;
+    abstract public function bmap(string $path, int $blocksize, int &$idx): int;
 
     /**
      * unsigned int flag_nullpath_ok:1;
@@ -281,30 +300,37 @@ trait MoubtableFilesystemTrait
     /**
      * int (*ioctl) (const char *, int cmd, void *arg, struct fuse_file_info *, unsigned int flags, void *data);
      */
-    abstract public function ioctl(string $path, int $cmd, CData $arg, CData $fuse_file_info, int $flags, CData $data): int;
+    abstract public function ioctl(
+        string $path,
+        int $cmd,
+        FuseIoctlArgPointer $arg,
+        FuseFileInfo $fuse_file_info,
+        int $flags,
+        FuseIoctlDataPointer $data
+    ): int;
 
     /**
      * int (*poll) (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp);
      */
-    abstract public function poll(string $path, CData $fuse_file_info, CData $fuse_pollhandle, int &$reventsp): int;
+    abstract public function poll(string $path, FuseFileInfo $fuse_file_info, FusePollHandle $fuse_pollhandle, int &$reventsp): int;
 
     /**
      * int (*write_buf) (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *);
      */
-    abstract public function writeBuf(string $path, CData $buf, int $offset, CData $fuse_file_info): int;
+    abstract public function writeBuf(string $path, FuseBufVec $buf, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*read_buf) (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *);
      */
-    abstract public function readBuf(string $path, CData $bufp, int $size, int $offset, CData $fuse_file_info): int;
+    abstract public function readBuf(string $path, FuseBufVec $bufp, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
 
     /**
      * int (*flock) (const char *, struct fuse_file_info *, int op);
      */
-    abstract public function flock(string $path, CData $fuse_file_info, int $op): int;
+    abstract public function flock(string $path, FuseFileInfo $fuse_file_info, int $op): int;
 
     /**
      * int (*fallocate) (const char *, int, off_t, off_t, struct fuse_file_info *);
      */
-    abstract public function fallocate(string $path, int $mode, int $offset, CData $fuse_file_info): int;
+    abstract public function fallocate(string $path, int $mode, int $offset, FuseFileInfo $fuse_file_info): int;
 }

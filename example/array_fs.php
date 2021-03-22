@@ -11,17 +11,17 @@
 
 declare(strict_types=1);
 
-use FFI\CData;
 use Fuse\FilesystemDefaultImplementationTrait;
 use Fuse\FilesystemInterface;
-use Fuse\Fuse;
+use Fuse\Libc\Errno\Errno;
+use Fuse\Libc\Fuse\FuseFileInfo;
+use Fuse\Libc\Fuse\FuseFillDir;
+use Fuse\Libc\Fuse\FuseReadDirBuffer;
+use Fuse\Libc\String\CBytesBuffer;
+use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Mounter;
 
 require 'vendor/autoload.php';
-
-const ENOENT = 2;
-const S_IFDIR = 0040000;
-const S_IFREG = 0100000;
 
 class ArrayFs implements FilesystemInterface
 {
@@ -39,20 +39,12 @@ class ArrayFs implements FilesystemInterface
         return $this->array;
     }
 
-    public function getattr(string $path, \FFI\CData $stbuf): int
+    public function getattr(string $path, Stat $stbuf): int
     {
-        $typename = 'struct stat';
-        $type = Fuse::getInstance()->ffi->type(
-            $typename
-        );
-        $size = FFI::sizeof(
-            $type
-        );
         echo "attr read {$path}" . PHP_EOL;
 
-        FFI::memset($stbuf, 0, $size);
         if ($path === '/') {
-            $stbuf->st_mode = S_IFDIR | 0777;
+            $stbuf->st_mode = Stat::S_IFDIR | 0777;
             $stbuf->st_nlink = 2;
             $stbuf->st_uid = getmyuid();
             $stbuf->st_gid = getmygid();
@@ -61,16 +53,16 @@ class ArrayFs implements FilesystemInterface
 
         $element = $this->getEntry($path);
         if (is_null($element)) {
-            return -ENOENT;
+            return -Errno::ENOENT;
         }
         if (is_array($element)) {
-            $stbuf->st_mode = S_IFDIR | 0777;
+            $stbuf->st_mode = Stat::S_IFDIR | 0777;
             $stbuf->st_nlink = 2;
             $stbuf->st_uid = getmyuid();
             $stbuf->st_gid = getmygid();
             return 0;
         }
-        $stbuf->st_mode = S_IFREG | 0777;
+        $stbuf->st_mode = Stat::S_IFREG | 0777;
         $stbuf->st_nlink = 1;
         $stbuf->st_size = strlen((string)$element);
         $stbuf->st_uid = getmyuid();
@@ -113,6 +105,9 @@ class ArrayFs implements FilesystemInterface
      */
     private function &getEntry(string $path)
     {
+        if ($path === '/') {
+            return $this->array;
+        }
         $splitted = explode('/', $path);
         array_shift($splitted);
         return $this->getRecursive($this->array, $splitted);
@@ -147,47 +142,52 @@ class ArrayFs implements FilesystemInterface
         });
     }
 
-    public function readdir(string $path, CData $buf, CData $filler, int $offset, CData $fi): int
+    public function readdir(string $path, FuseReadDirBuffer $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fi): int
     {
         $filler($buf, '.', null, 0);
         $filler($buf, '..', null, 0);
-        foreach ($this->array as $key => $value) {
+        $entry = $this->getEntry($path);
+        if (!is_array($entry)) {
+            var_dump($path, $entry);
+            return -Errno::ENOTDIR;
+        }
+        foreach ($entry as $key => $value) {
             $filler($buf, (string)$key, null, 0);
         }
 
         return 0;
     }
 
-    public function open(string $path, CData $fi): int
+    public function open(string $path, FuseFileInfo $fuse_file_info): int
     {
         $entry = $this->getEntry($path);
-        if (!is_string($entry)) {
-            return -ENOENT;
+        if (!is_scalar($entry)) {
+            return Errno::ENOENT;
         }
 
         echo "open {$path}" . PHP_EOL;
         return 0;
     }
 
-    public function read(string $path, CData $buf, int $size, int $offset, CData $fi): int
+    public function read(string $path, CBytesBuffer $buf, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
         $entry = $this->getEntry($path);
 
         echo "read {$path}" . PHP_EOL;
 
-        $len = strlen($entry);
+        $len = strlen((string)$entry);
 
         if ($offset + $size > $len) {
             $size = ($len - $offset);
         }
 
-        $content = substr($entry, $offset, $size);
-        FFI::memcpy($buf, $content, $size);
+        $content = substr((string)$entry, $offset, $size);
+        $buf->write($content, $size);
 
         return $size;
     }
 
-    public function write(string $path, string $buffer, int $size, int $offset, CData $fuse_file_info): int
+    public function write(string $path, string $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
         $entry = &$this->getEntry($path);
         $entry = substr_replace($entry, $buffer, $offset, $size);
@@ -195,7 +195,7 @@ class ArrayFs implements FilesystemInterface
         return $size;
     }
 
-    public function create(string $path, int $mode, CData $fuse_file_info): int
+    public function create(string $path, int $mode, FuseFileInfo $fuse_file_info): int
     {
         $entry = &$this->getParentEntry($path);
         if (is_array($entry)) {
@@ -204,7 +204,7 @@ class ArrayFs implements FilesystemInterface
             $entry[$filename] = '';
             return 0;
         } else {
-            return ENOENT;
+            return Errno::ENOENT;
         }
     }
 
@@ -225,17 +225,19 @@ class ArrayFs implements FilesystemInterface
             $this->unsetEntry($from);
             return 0;
         } else {
-            return ENOENT;
+            return -Errno::ENOENT;
         }
     }
 }
 
+$e = new \DateTimeImmutable();
 
 $mounter = new Mounter();
 $array_fs = new ArrayFs([
     1,
     2,
     'foo' => 'bar',
+    'e' => json_decode(json_encode($e), true)
 ]);
 $result = $mounter->mount('/tmp/example/', $array_fs);
 var_dump($array_fs->getArray());

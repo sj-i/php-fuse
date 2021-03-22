@@ -16,6 +16,13 @@ namespace Fuse\Libc\Time;
 use Fuse\FFI\TypedCDataDefaultImplementationTrait;
 use Fuse\FFI\TypedCDataInterface;
 
+/**
+ * struct timespec
+ * {
+ *     long tv_sec;
+ *     long tv_nsec;
+ * };
+ */
 final class TimeSpec implements TypedCDataInterface
 {
     use TypedCDataDefaultImplementationTrait;

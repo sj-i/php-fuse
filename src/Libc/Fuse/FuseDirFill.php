@@ -16,6 +16,9 @@ namespace Fuse\Libc\Fuse;
 use FFI\CData;
 use Fuse\FFI\TypedCDataInterface;
 
+/**
+ * typedef int (*fuse_dirfil_t) (fuse_dirh_t h, const char *name, int type, ino_t ino);
+ */
 final class FuseDirFill implements TypedCDataInterface
 {
     /** @var callable(CData $dirhandle, string $name, int $type, int $ino):int */

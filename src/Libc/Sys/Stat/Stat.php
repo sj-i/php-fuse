@@ -42,6 +42,9 @@ final class Stat implements TypedCDataInterface
 {
     use TypedCDataDefaultImplementationTrait;
 
+    const S_IFDIR = 0040000;
+    const S_IFREG = 0100000;
+
     public static function getCTypeName(): string
     {
         return 'struct stat';

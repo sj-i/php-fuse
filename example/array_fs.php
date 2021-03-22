@@ -14,7 +14,7 @@ declare(strict_types=1);
 use FFI\CData;
 use Fuse\FilesystemDefaultImplementationTrait;
 use Fuse\FilesystemInterface;
-use Fuse\Fuse;
+use Fuse\Libc\Errno\Errno;
 use Fuse\Libc\Fuse\FuseFileInfo;
 use Fuse\Libc\Fuse\FuseFillDir;
 use Fuse\Libc\Fuse\FuseReadDirBuffer;
@@ -23,11 +23,6 @@ use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Mounter;
 
 require 'vendor/autoload.php';
-
-const ENOENT = 2;
-const ENOTDIR = 20;
-const S_IFDIR = 0040000;
-const S_IFREG = 0100000;
 
 class ArrayFs implements FilesystemInterface
 {
@@ -50,7 +45,7 @@ class ArrayFs implements FilesystemInterface
         echo "attr read {$path}" . PHP_EOL;
 
         if ($path === '/') {
-            $stbuf->st_mode = S_IFDIR | 0777;
+            $stbuf->st_mode = Stat::S_IFDIR | 0777;
             $stbuf->st_nlink = 2;
             $stbuf->st_uid = getmyuid();
             $stbuf->st_gid = getmygid();
@@ -59,16 +54,16 @@ class ArrayFs implements FilesystemInterface
 
         $element = $this->getEntry($path);
         if (is_null($element)) {
-            return -ENOENT;
+            return -Errno::ENOENT;
         }
         if (is_array($element)) {
-            $stbuf->st_mode = S_IFDIR | 0777;
+            $stbuf->st_mode = Stat::S_IFDIR | 0777;
             $stbuf->st_nlink = 2;
             $stbuf->st_uid = getmyuid();
             $stbuf->st_gid = getmygid();
             return 0;
         }
-        $stbuf->st_mode = S_IFREG | 0777;
+        $stbuf->st_mode = Stat::S_IFREG | 0777;
         $stbuf->st_nlink = 1;
         $stbuf->st_size = strlen((string)$element);
         $stbuf->st_uid = getmyuid();
@@ -155,7 +150,7 @@ class ArrayFs implements FilesystemInterface
         $entry = $this->getEntry($path);
         if (!is_array($entry)) {
             var_dump($path, $entry);
-            return ENOTDIR;
+            return -Errno::ENOTDIR;
         }
         foreach ($entry as $key => $value) {
             $filler($buf, (string)$key, null, 0);
@@ -168,7 +163,7 @@ class ArrayFs implements FilesystemInterface
     {
         $entry = $this->getEntry($path);
         if (!is_scalar($entry)) {
-            return -ENOENT;
+            return Errno::ENOENT;
         }
 
         echo "open {$path}" . PHP_EOL;
@@ -210,7 +205,7 @@ class ArrayFs implements FilesystemInterface
             $entry[$filename] = '';
             return 0;
         } else {
-            return ENOENT;
+            return Errno::ENOENT;
         }
     }
 
@@ -231,7 +226,7 @@ class ArrayFs implements FilesystemInterface
             $this->unsetEntry($from);
             return 0;
         } else {
-            return ENOENT;
+            return -Errno::ENOENT;
         }
     }
 }

@@ -5,15 +5,13 @@ include __DIR__ . "/../vendor/autoload.php";
 use FFI\CData;
 use Fuse\Fuse;
 use Fuse\FuseOperations;
+use Fuse\Libc\Errno\Errno;
+use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Mounter;
 
 const FILE_PATH = '/example';
 const FILE_NAME = 'example';
 const FILE_CONTENT = 'hello FUSE from PHP' . PHP_EOL;
-
-const ENOENT = 2;
-const S_IFDIR = 0040000;
-const S_IFREG = 0100000;
 
 function getattr_cb(string $path, \FFI\CData $stbuf)
 {
@@ -28,7 +26,7 @@ function getattr_cb(string $path, \FFI\CData $stbuf)
 
     FFI::memset($stbuf, 0, $size);
     if ($path === '/') {
-        $stbuf->st_mode = S_IFDIR | 0755;
+        $stbuf->st_mode = Stat::S_IFDIR | 0755;
         $stbuf->st_nlink = 2;
         $stbuf->st_uid = getmyuid();
         $stbuf->st_gid = getmygid();
@@ -36,7 +34,7 @@ function getattr_cb(string $path, \FFI\CData $stbuf)
     }
 
     if ($path === FILE_PATH) {
-        $stbuf->st_mode = S_IFREG | 0777;
+        $stbuf->st_mode = Stat::S_IFREG | 0777;
         $stbuf->st_nlink = 1;
         $stbuf->st_size = strlen(FILE_CONTENT);
         $stbuf->st_uid = getmyuid();
@@ -44,7 +42,7 @@ function getattr_cb(string $path, \FFI\CData $stbuf)
         return 0;
     }
 
-    return -ENOENT;
+    return -Errno::ENOENT;
 }
 
 function readdir_cb(string $path, CData $buf, CData $filler, int $offset, CData $fi)
@@ -59,7 +57,7 @@ function readdir_cb(string $path, CData $buf, CData $filler, int $offset, CData 
 function open_cb(string $path, CData $fi)
 {
     if ($path !== FILE_PATH) {
-        return -ENOENT;
+        return -Errno::ENOENT;
     }
 
     echo "open {$path}" . PHP_EOL;

@@ -43,4 +43,9 @@ final class FuseDirHandle implements TypedCDataInterface
     {
         return $this->cdata;
     }
+
+    public static function newCData(): CData
+    {
+        throw new \LogicException('this type doesn\'t support creation of CData');
+    }
 }

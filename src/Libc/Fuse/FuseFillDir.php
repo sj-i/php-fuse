@@ -56,9 +56,6 @@ final class FuseFillDir implements TypedCDataInterface
 
     public static function newCData(): CData
     {
-        throw new \LogicException();
+        throw new \LogicException('this type doesn\'t support creation of CData');
     }
-}
-{
-
 }

@@ -2,7 +2,6 @@
 
 include __DIR__ . "/../vendor/autoload.php";
 
-use FFI\CData;
 use Fuse\FilesystemDefaultImplementationTrait;
 use Fuse\FilesystemInterface;
 use Fuse\Libc\Errno\Errno;
@@ -56,10 +55,16 @@ class DummyFs implements FilesystemInterface
 
     public function open(string $path, FuseFileInfo $fuse_file_info): int
     {
+        echo "open {$path}" . PHP_EOL;
+
+        if ($path !== self::FILE_PATH) {
+            return -Errno::ENOENT;
+        }
+
         return 0;
     }
 
-    public function read(string $path, CBytesBuffer $buf, int $size, int $offset, FuseFileInfo $fi): int
+    public function read(string $path, CBytesBuffer $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
         echo "read {$path}" . PHP_EOL;
 

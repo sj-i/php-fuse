@@ -11,7 +11,6 @@
 
 declare(strict_types=1);
 
-use FFI\CData;
 use Fuse\FilesystemDefaultImplementationTrait;
 use Fuse\FilesystemInterface;
 use Fuse\Libc\Errno\Errno;

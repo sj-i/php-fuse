@@ -15,7 +15,7 @@ namespace Fuse\Libc\Errno;
 
 final class Errno
 {
-    const ENOENT = 2;
-    const ENOTDIR = 20;
-    const ENOSYS = 38;
+    public const ENOENT = 2;
+    public const ENOTDIR = 20;
+    public const ENOSYS = 38;
 }

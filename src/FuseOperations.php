@@ -37,8 +37,9 @@ final class FuseOperations implements Mountable
     /**
      * int (*getdir) (const char *, fuse_dirh_t, fuse_dirfil_t);
      *
+     * @psalm-type fuse_dirfil_t=callable(CData $dirhandle, string $name, int $type, int $ino)
      * @deprecated
-     * @var null|callable(string $path, CData $dirhandle, callable(CData $dirhandle, string $name, int $type, int $ino)): int
+     * @var null|callable(string $path, CData $dirhandle, fuse_dirfil_t $dirfil): int
      */
     public $getdir = null;
 

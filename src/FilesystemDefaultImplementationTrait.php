@@ -250,8 +250,13 @@ trait FilesystemDefaultImplementationTrait
     /**
      * int (*readdir) (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_info *);
      */
-    public function readdir(string $path, FuseReadDirBuffer $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fuse_file_info): int
-    {
+    public function readdir(
+        string $path,
+        FuseReadDirBuffer $buf,
+        FuseFillDir $filler,
+        int $offset,
+        FuseFileInfo $fuse_file_info
+    ): int {
         throw new FuseLogicException('not implemented');
     }
 
@@ -403,8 +408,12 @@ trait FilesystemDefaultImplementationTrait
     /**
      * int (*poll) (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp);
      */
-    public function poll(string $path, FuseFileInfo $fuse_file_info, FusePollHandle $fuse_pollhandle, int &$reventsp): int
-    {
+    public function poll(
+        string $path,
+        FuseFileInfo $fuse_file_info,
+        FusePollHandle $fuse_pollhandle,
+        int &$reventsp
+    ): int {
         throw new FuseLogicException('not implemented');
     }
 

@@ -170,12 +170,24 @@ trait MountableFilesystemTrait
     /**
      * int (*read) (const char *, char *, size_t, off_t, struct fuse_file_info *);
      */
-    abstract public function read(string $path, CBytesBuffer $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
+    abstract public function read(
+        string $path,
+        CBytesBuffer $buffer,
+        int $size,
+        int $offset,
+        FuseFileInfo $fuse_file_info
+    ): int;
 
     /**
      * int (*write) (const char *, const char *, size_t, off_t, struct fuse_file_info *);
      */
-    abstract public function write(string $path, string $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
+    abstract public function write(
+        string $path,
+        string $buffer,
+        int $size,
+        int $offset,
+        FuseFileInfo $fuse_file_info
+    ): int;
 
     /**
      * int (*statfs) (const char *, struct statvfs *);
@@ -225,7 +237,13 @@ trait MountableFilesystemTrait
     /**
      * int (*readdir) (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_info *);
      */
-    abstract public function readdir(string $path, FuseReadDirBuffer $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fuse_file_info): int;
+    abstract public function readdir(
+        string $path,
+        FuseReadDirBuffer $buf,
+        FuseFillDir $filler,
+        int $offset,
+        FuseFileInfo $fuse_file_info
+    ): int;
 
     /**
      * int (*releasedir) (const char *, struct fuse_file_info *);
@@ -312,7 +330,12 @@ trait MountableFilesystemTrait
     /**
      * int (*poll) (const char *, struct fuse_file_info *, struct fuse_pollhandle *ph, unsigned *reventsp);
      */
-    abstract public function poll(string $path, FuseFileInfo $fuse_file_info, FusePollHandle $fuse_pollhandle, int &$reventsp): int;
+    abstract public function poll(
+        string $path,
+        FuseFileInfo $fuse_file_info,
+        FusePollHandle $fuse_pollhandle,
+        int &$reventsp
+    ): int;
 
     /**
      * int (*write_buf) (const char *, struct fuse_bufvec *buf, off_t off, struct fuse_file_info *);
@@ -322,7 +345,13 @@ trait MountableFilesystemTrait
     /**
      * int (*read_buf) (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *);
      */
-    abstract public function readBuf(string $path, FuseBufVec $bufp, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
+    abstract public function readBuf(
+        string $path,
+        FuseBufVec $bufp,
+        int $size,
+        int $offset,
+        FuseFileInfo $fuse_file_info
+    ): int;
 
     /**
      * int (*flock) (const char *, struct fuse_file_info *, int op);

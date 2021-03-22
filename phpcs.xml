@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<ruleset name="php-fuse">
+    <description>php-fuse</description>
+    <rule ref="PSR12" />
+</ruleset>

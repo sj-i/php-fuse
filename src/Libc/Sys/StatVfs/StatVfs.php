@@ -49,6 +49,7 @@ final class StatVfs implements TypedCDataInterface
     public int $f_fsid;
     public int $f_flag;
     public int $f_namemax;
+    // phpcs:ignore PSR2.Classes.PropertyDeclaration
     public ?CData $__f_spare;
 
     public function __construct(
@@ -83,7 +84,4 @@ final class StatVfs implements TypedCDataInterface
     {
         return 'struct statvfs *';
     }
-
-
-
 }

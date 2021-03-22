@@ -22,13 +22,14 @@ class TypedCDataWrapperTest extends TestCase
 {
     public function testCreateWrapperStat()
     {
-        $test_class = new class() {
-            public function test_method(Stat $stat): void {
+        $test_class = new class () {
+            public function testMethod(Stat $stat): void
+            {
                 $stat->st_blocks = 123;
             }
         };
         $wrapper_creator = new TypedCDataWrapper();
-        $wrapper = $wrapper_creator->createWrapper([$test_class, 'test_method']);
+        $wrapper = $wrapper_creator->createWrapper([$test_class, 'testMethod']);
         $cdata_stat = Fuse::getInstance()->ffi->new(Stat::getCTypeName());
         $wrapper($cdata_stat);
         $this->assertSame(123, $cdata_stat->st_blocks);
@@ -36,19 +37,21 @@ class TypedCDataWrapperTest extends TestCase
 
     public function testCreateWrapperFuseBufVec()
     {
-        $test_class = new class($this) {
+        $test_class = new class ($this) {
             private TestCase $test_case;
-            public function __construct(TestCase $test_case) {
+            public function __construct(TestCase $test_case)
+            {
                 $this->test_case = $test_case;
             }
-            public function test_method(FuseBufVec $fuse_buf_vec): void {
+            public function testMethod(FuseBufVec $fuse_buf_vec): void
+            {
                 $this->test_case->assertSame(789, $fuse_buf_vec->buf[0]->size);
                 $fuse_buf_vec->count = 123;
                 $fuse_buf_vec->buf[0]->size = 456;
             }
         };
         $wrapper_creator = new TypedCDataWrapper();
-        $wrapper = $wrapper_creator->createWrapper([$test_class, 'test_method']);
+        $wrapper = $wrapper_creator->createWrapper([$test_class, 'testMethod']);
         $cdata_stat = Fuse::getInstance()->ffi->new(FuseBufVec::getCTypeName());
         $cdata_stat->buf[0]->size = 789;
         $wrapper($cdata_stat);

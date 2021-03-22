@@ -42,8 +42,8 @@ final class Stat implements TypedCDataInterface
 {
     use TypedCDataDefaultImplementationTrait;
 
-    const S_IFDIR = 0040000;
-    const S_IFREG = 0100000;
+    public const S_IFDIR = 0040000;
+    public const S_IFREG = 0100000;
 
     public static function getCTypeName(): string
     {
@@ -56,6 +56,7 @@ final class Stat implements TypedCDataInterface
     public int $st_mode;
     public int $st_uid;
     public int $st_gid;
+    // phpcs:ignore PSR2.Classes.PropertyDeclaration
     public int $__pad0;
     public int $st_rdev;
     public int $st_size;

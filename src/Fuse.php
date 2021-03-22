@@ -18,7 +18,7 @@ use FFI\CData;
 
 final class Fuse
 {
-    static self $instance;
+    private static self $instance;
     public FFI $ffi;
 
     private function __construct(FFI $ffi)

@@ -24,7 +24,7 @@ jobs:
           coverage: pcov
 
       - name: Install libfuse
-        run: sudo apt-get install fuse
+        run: sudo apt-get install libfuse-dev
 
       - name: Get Composer Cache Directory
         id: composer-cache

@@ -23,6 +23,9 @@ jobs:
           extensions: ffi, dom, mbstring
           coverage: pcov
 
+      - name: Install libfuse
+        run: sudo apt-get install fuse
+
       - name: Get Composer Cache Directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"

@@ -25,7 +25,7 @@ composer require sj-i/php-fuse
 
 ## Documentation
 - Currently, no documentation provided. :-(
-- If you want to write a filesystem in PHP by using this library, see examples in this repository and [the libfuse API documentation](https://libfuse.github.io/doxygen/index.html) for now.
+- If you want to write a filesystem in PHP by using this library, see [examples](https://github.com/sj-i/php-fuse/tree/master/example) in this repository and [the libfuse API documentation](https://libfuse.github.io/doxygen/index.html) for now.
 
 ## Todo
 - [] bump libfuse to 3.9

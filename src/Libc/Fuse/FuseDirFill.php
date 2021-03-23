@@ -21,7 +21,7 @@ use Fuse\FFI\TypedCDataInterface;
  */
 final class FuseDirFill implements TypedCDataInterface
 {
-    /** @var callable(CData $dirhandle, string $name, int $type, int $ino):int */
+    /** @var \Fuse\FuseDirFillCData */
     private CData $cdata;
 
     public function __invoke(FuseDirHandle $dirhandle, string $name, int $type, int $ino): int
@@ -34,14 +34,16 @@ final class FuseDirFill implements TypedCDataInterface
         return 'fuse_dirfil_t';
     }
 
+    /** @param \Fuse\FuseDirFillCData $cdata */
     public function __construct(CData $cdata)
     {
         $this->cdata = $cdata;
     }
 
-    /** @return static */
+    /** @return self */
     public static function fromCData(CData $cdata): self
     {
+        /** @var \Fuse\FuseDirFillCData $cdata */
         return new self($cdata);
     }
 

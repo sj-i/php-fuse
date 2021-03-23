@@ -36,6 +36,28 @@ final class Flock implements TypedCDataInterface
     public int $l_len;
     public int $l_pid;
 
+    /**
+     * Flock constructor.
+     * @param int $l_type
+     * @param int $l_whence
+     * @param int $l_start
+     * @param int $l_len
+     * @param int $l_pid
+     */
+    public function __construct(
+        int $l_type = 0,
+        int $l_whence = 0,
+        int $l_start = 0,
+        int $l_len = 0,
+        int $l_pid = 0
+    ) {
+        $this->l_type = $l_type;
+        $this->l_whence = $l_whence;
+        $this->l_start = $l_start;
+        $this->l_len = $l_len;
+        $this->l_pid = $l_pid;
+    }
+
     public static function getCTypeName(): string
     {
         return 'struct flock';

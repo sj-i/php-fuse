@@ -16,7 +16,7 @@ namespace Fuse\Libc\Fuse;
 use FFI\CData;
 use Fuse\FFI\TypedCDataInterface;
 
-class FusePrivateData implements TypedCDataInterface
+final class FusePrivateData implements TypedCDataInterface
 {
     private CData $cdata;
 

@@ -22,7 +22,7 @@ use Fuse\Libc\Sys\Stat\Stat;
  */
 final class FuseFillDir implements TypedCDataInterface
 {
-    /** @var callable(CData $dirhandle, string $name, int $type, int $ino):int */
+    /** @var \Fuse\FuseFillDirCData */
     private CData $cdata;
 
     public function __invoke(FuseReadDirBuffer $buf, string $name, ?Stat $stbuf, int $off): int
@@ -38,6 +38,7 @@ final class FuseFillDir implements TypedCDataInterface
         return 'fuse_fill_dir_t';
     }
 
+    /** @param \Fuse\FuseFillDirCData $cdata */
     public function __construct(CData $cdata)
     {
         $this->cdata = $cdata;
@@ -46,6 +47,7 @@ final class FuseFillDir implements TypedCDataInterface
     /** @return static */
     public static function fromCData(CData $cdata): self
     {
+        /** @var \Fuse\FuseFillDirCData $cdata */
         return new self($cdata);
     }
 

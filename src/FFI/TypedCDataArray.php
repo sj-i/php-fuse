@@ -14,21 +14,23 @@ declare(strict_types=1);
 namespace Fuse\FFI;
 
 use FFI\CData;
+use FFI\CDataArray;
 
 /**
  * @template T of TypedCDataInterface
  */
 class TypedCDataArray implements \ArrayAccess
 {
+    /** @var \FFI\CDataArray */
     private CData $cdata;
     /** @var class-string<T> $typed_cdata_class */
     private string $typed_cdata_class;
-    /** @var T[] */
+    /** @var array<int, T> */
     private array $typed_element_cache;
 
     /**
      * TypedCDataArray constructor.
-     * @param CData $cdata
+     * @param \FFI\CDataArray $cdata
      * @param class-string<T> $typed_cdata_class
      */
     public function __construct(CData $cdata, string $typed_cdata_class)
@@ -43,7 +45,10 @@ class TypedCDataArray implements \ArrayAccess
         return true;
     }
 
-    public function offsetGet($offset)
+    /**
+     * @param int $offset
+     */
+    public function offsetGet($offset): TypedCDataInterface
     {
         if (!isset($this->typed_element_cache[$offset])) {
             $this->typed_element_cache[$offset] = $this->typed_cdata_class::fromCData($this->cdata[$offset]);
@@ -51,6 +56,10 @@ class TypedCDataArray implements \ArrayAccess
         return $this->typed_element_cache[$offset];
     }
 
+    /**
+     * @param int $offset
+     * @param TypedCDataInterface $value
+     */
     public function offsetSet($offset, $value)
     {
         $value->toCData($this->cdata[$offset]);
@@ -61,8 +70,8 @@ class TypedCDataArray implements \ArrayAccess
     }
 
     /**
-     * @template T2
-     * @param CData $cdata
+     * @template T2 of TypedCDataInterface
+     * @param \FFI\CDataArray $cdata
      * @param class-string<T2> $typed_cdata_class
      * @return self<T2>
      */

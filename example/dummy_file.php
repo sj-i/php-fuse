@@ -13,7 +13,7 @@ const FILE_PATH = '/example';
 const FILE_NAME = 'example';
 const FILE_CONTENT = 'hello FUSE from PHP' . PHP_EOL;
 
-function getattr_cb(string $path, \FFI\CData $stbuf)
+function getattr_cb(string $path, \FFI\CData $stbuf): int
 {
     $typename = 'struct stat';
     $type = Fuse::getInstance()->ffi->type(
@@ -45,7 +45,7 @@ function getattr_cb(string $path, \FFI\CData $stbuf)
     return -Errno::ENOENT;
 }
 
-function readdir_cb(string $path, CData $buf, CData $filler, int $offset, CData $fi)
+function readdir_cb(string $path, CData $buf, CData $filler, int $offset, CData $fi): int
 {
     $filler($buf, '.', null, 0);
     $filler($buf, '..', null, 0);
@@ -54,7 +54,7 @@ function readdir_cb(string $path, CData $buf, CData $filler, int $offset, CData 
     return 0;
 }
 
-function open_cb(string $path, CData $fi)
+function open_cb(string $path, CData $fi): int
 {
     if ($path !== FILE_PATH) {
         return -Errno::ENOENT;
@@ -64,7 +64,7 @@ function open_cb(string $path, CData $fi)
     return 0;
 }
 
-function read_cb(string $path, CData $buf, int $size, int $offset, CData $fi)
+function read_cb(string $path, CData $buf, int $size, int $offset, CData $fi): int
 {
     echo "read {$path}" . PHP_EOL;
 

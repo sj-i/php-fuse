@@ -16,5 +16,8 @@
     </projectFiles>
     <stubs>
         <file name="vendor/jetbrains/phpstorm-stubs/FFI/FFI.php"/>
+        <file name="tools/stubs/FFI/CData.php"/>
+        <file name="tools/stubs/Fuse/FuseFFI.php"/>
+        <file name="tools/stubs/Fuse/FuseCData.php"/>
     </stubs>
 </psalm>

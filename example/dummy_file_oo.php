@@ -20,32 +20,37 @@ class DummyFs implements FilesystemInterface
     const FILE_NAME = 'example';
     const FILE_CONTENT = 'hello FUSE from PHP' . PHP_EOL;
 
-    public function getattr(string $path, Stat $stbuf): int
+    public function getattr(string $path, Stat $stat): int
     {
         echo "attr read {$path}" . PHP_EOL;
 
         if ($path === '/') {
-            $stbuf->st_mode = Stat::S_IFDIR | 0755;
-            $stbuf->st_nlink = 2;
-            $stbuf->st_uid = getmyuid();
-            $stbuf->st_gid = getmygid();
+            $stat->st_mode = Stat::S_IFDIR | 0755;
+            $stat->st_nlink = 2;
+            $stat->st_uid = getmyuid();
+            $stat->st_gid = getmygid();
             return 0;
         }
 
         if ($path === self::FILE_PATH) {
-            $stbuf->st_mode = Stat::S_IFREG | 0777;
-            $stbuf->st_nlink = 1;
-            $stbuf->st_size = strlen(self::FILE_CONTENT);
-            $stbuf->st_uid = getmyuid();
-            $stbuf->st_gid = getmygid();
+            $stat->st_mode = Stat::S_IFREG | 0777;
+            $stat->st_nlink = 1;
+            $stat->st_size = strlen(self::FILE_CONTENT);
+            $stat->st_uid = getmyuid();
+            $stat->st_gid = getmygid();
             return 0;
         }
 
         return -Errno::ENOENT;
     }
 
-    public function readdir(string $path, FuseReadDirBuffer $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fi): int
-    {
+    public function readdir(
+        string $path,
+        FuseReadDirBuffer $buf,
+        FuseFillDir $filler,
+        int $offset,
+        FuseFileInfo $fuse_file_info
+    ): int {
         $filler($buf, '.', null, 0);
         $filler($buf, '..', null, 0);
         $filler($buf, self::FILE_NAME, null, 0);

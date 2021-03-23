@@ -23,12 +23,20 @@ use Fuse\Mounter;
 
 require 'vendor/autoload.php';
 
+/**
+ * @psalm-type NodeType=scalar|array|null
+ */
 class ArrayFs implements FilesystemInterface
 {
     use FilesystemDefaultImplementationTrait;
 
+    /** @var NodeType[] */
     private array $array;
 
+    /**
+     * ArrayFs constructor.
+     * @param NodeType[] $array
+     */
     public function __construct(array $array)
     {
         $this->array = $array;
@@ -39,15 +47,15 @@ class ArrayFs implements FilesystemInterface
         return $this->array;
     }
 
-    public function getattr(string $path, Stat $stbuf): int
+    public function getattr(string $path, Stat $stat): int
     {
         echo "attr read {$path}" . PHP_EOL;
 
         if ($path === '/') {
-            $stbuf->st_mode = Stat::S_IFDIR | 0777;
-            $stbuf->st_nlink = 2;
-            $stbuf->st_uid = getmyuid();
-            $stbuf->st_gid = getmygid();
+            $stat->st_mode = Stat::S_IFDIR | 0777;
+            $stat->st_nlink = 2;
+            $stat->st_uid = getmyuid();
+            $stat->st_gid = getmygid();
             return 0;
         }
 
@@ -56,20 +64,26 @@ class ArrayFs implements FilesystemInterface
             return -Errno::ENOENT;
         }
         if (is_array($element)) {
-            $stbuf->st_mode = Stat::S_IFDIR | 0777;
-            $stbuf->st_nlink = 2;
-            $stbuf->st_uid = getmyuid();
-            $stbuf->st_gid = getmygid();
+            $stat->st_mode = Stat::S_IFDIR | 0777;
+            $stat->st_nlink = 2;
+            $stat->st_uid = getmyuid();
+            $stat->st_gid = getmygid();
             return 0;
         }
-        $stbuf->st_mode = Stat::S_IFREG | 0777;
-        $stbuf->st_nlink = 1;
-        $stbuf->st_size = strlen((string)$element);
-        $stbuf->st_uid = getmyuid();
-        $stbuf->st_gid = getmygid();
+        $stat->st_mode = Stat::S_IFREG | 0777;
+        $stat->st_nlink = 1;
+        $stat->st_size = strlen((string)$element);
+        $stat->st_uid = getmyuid();
+        $stat->st_gid = getmygid();
         return 0;
     }
 
+    /**
+     * @param NodeType[] $array
+     * @param list<string> $offsets
+     * @param callable(array, string):NodeType $operation
+     * @return NodeType
+     */
     private function &getRecursive(&$array, array $offsets, ?callable $operation = null)
     {
         $null = null;
@@ -84,6 +98,7 @@ class ArrayFs implements FilesystemInterface
                 if (!is_null($operation)) {
                     return $operation($array, $offsets[0]);
                 } else {
+                    /** @var NodeType */
                     return $array[$offsets[0]];
                 }
             } else {
@@ -93,7 +108,9 @@ class ArrayFs implements FilesystemInterface
 
         $offset = array_shift($offsets);
         if (is_array($array[$offset])) {
-            return $this->getRecursive($array[$offset], $offsets);
+            /** @var NodeType[] $next_array */
+            $next_array =& $array[$offset];
+            return $this->getRecursive($next_array, $offsets);
         } else {
             return $null;
         }
@@ -101,7 +118,7 @@ class ArrayFs implements FilesystemInterface
 
     /**
      * @param string $path
-     * @return string|array|null
+     * @return scalar|array|null
      */
     private function &getEntry(string $path)
     {
@@ -115,7 +132,7 @@ class ArrayFs implements FilesystemInterface
 
     /**
      * @param string $path
-     * @return string|array|null
+     * @return NodeType
      */
     private function &getParentEntry(string $path)
     {
@@ -135,23 +152,31 @@ class ArrayFs implements FilesystemInterface
     {
         $splitted = explode('/', $path);
         array_shift($splitted);
-        $this->getRecursive($this->array, $splitted, function &(array &$array, $index) {
-            $null = null;
-            unset($array[$index]);
-            return $null;
-        });
+        $this->getRecursive(
+            $this->array,
+            $splitted,
+            function &(array &$array, string $index) {
+                $null = null;
+                unset($array[$index]);
+                return $null;
+            }
+        );
     }
 
-    public function readdir(string $path, FuseReadDirBuffer $buf, FuseFillDir $filler, int $offset, FuseFileInfo $fi): int
-    {
+    public function readdir(
+        string $path,
+        FuseReadDirBuffer $buf,
+        FuseFillDir $filler,
+        int $offset,
+        FuseFileInfo $fuse_file_info
+    ): int {
         $filler($buf, '.', null, 0);
         $filler($buf, '..', null, 0);
         $entry = $this->getEntry($path);
         if (!is_array($entry)) {
-            var_dump($path, $entry);
             return -Errno::ENOTDIR;
         }
-        foreach ($entry as $key => $value) {
+        foreach ($entry as $key => $_) {
             $filler($buf, (string)$key, null, 0);
         }
 
@@ -169,12 +194,13 @@ class ArrayFs implements FilesystemInterface
         return 0;
     }
 
-    public function read(string $path, CBytesBuffer $buf, int $size, int $offset, FuseFileInfo $fuse_file_info): int
+    public function read(string $path, CBytesBuffer $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
         $entry = $this->getEntry($path);
 
         echo "read {$path}" . PHP_EOL;
 
+        assert(!is_array($entry));
         $len = strlen((string)$entry);
 
         if ($offset + $size > $len) {
@@ -182,7 +208,7 @@ class ArrayFs implements FilesystemInterface
         }
 
         $content = substr((string)$entry, $offset, $size);
-        $buf->write($content, $size);
+        $buffer->write($content, $size);
 
         return $size;
     }
@@ -190,7 +216,8 @@ class ArrayFs implements FilesystemInterface
     public function write(string $path, string $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
         $entry = &$this->getEntry($path);
-        $entry = substr_replace($entry, $buffer, $offset, $size);
+        assert(!is_array($entry));
+        $entry = substr_replace((string)$entry, $buffer, $offset, $size);
 
         return $size;
     }
@@ -233,6 +260,7 @@ class ArrayFs implements FilesystemInterface
 $e = new \DateTimeImmutable();
 
 $mounter = new Mounter();
+/** @psalm-suppress MixedArgumentTypeCoercion */
 $array_fs = new ArrayFs([
     1,
     2,
@@ -240,5 +268,6 @@ $array_fs = new ArrayFs([
     'e' => json_decode(json_encode($e), true)
 ]);
 $result = $mounter->mount('/tmp/example/', $array_fs);
+/** @psalm-suppress ForbiddenCode */
 var_dump($array_fs->getArray());
 return $result;

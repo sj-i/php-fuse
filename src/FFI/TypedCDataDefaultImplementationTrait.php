@@ -24,18 +24,27 @@ use ReflectionProperty;
 
 trait TypedCDataDefaultImplementationTrait
 {
-    /** @return self */
+    /** @return static */
     public static function fromCData(CData $cdata): self
     {
         $class = new \ReflectionClass(self::class);
         $self = new self();
         foreach ($class->getProperties() as $property) {
             $name = $property->getName();
-            $type = $property->getType()->getName();
-            if (is_a($type, TypedCDataInterface::class, true)) {
-                $self->$name = $type::fromCData($cdata->$name);
-            } elseif (is_a($type, TypedCDataArray::class, true)) {
-                $self->$name = $type::fromCData($cdata->$name, self::getElementTypeOfCDataArray($property));
+            $type = $property->getType();
+            if (is_null($type)) {
+                throw new \LogicException('property of TypedCData must have types');
+            }
+            assert($type instanceof \ReflectionNamedType);
+            $type_name = $type->getName();
+            if (is_a($type_name, TypedCDataInterface::class, true)) {
+                /** @var CData $original_cdata */
+                $original_cdata = $cdata->$name;
+                $self->$name = $type_name::fromCData($original_cdata);
+            } elseif (is_a($type_name, TypedCDataArray::class, true)) {
+                /** @var \FFI\CDataArray $original_cdata */
+                $original_cdata = $cdata->$name;
+                $self->$name = $type_name::fromCData($original_cdata, self::getElementTypeOfCDataArray($property));
             } else {
                 $self->$name = $cdata->$name;
             }
@@ -43,7 +52,10 @@ trait TypedCDataDefaultImplementationTrait
         return $self;
     }
 
-    private static function getElementTypeOfCDataArray(ReflectionProperty $property)
+    /**
+     * @return class-string<TypedCDataInterface>
+     */
+    private static function getElementTypeOfCDataArray(ReflectionProperty $property): string
     {
         $doc_comment = $property->getDocComment();
         if (!is_string($doc_comment)) {
@@ -65,18 +77,44 @@ trait TypedCDataDefaultImplementationTrait
         if (!($parameter_type instanceof ObjectType)) {
             throw new \LogicException('parameter type of TypedCDataArray property must be a object type');
         }
-        return $parameter_type->class_name;
+        $element_type = $parameter_type->class_name;
+        if (!is_a($element_type, TypedCDataInterface::class, true)) {
+            throw new \LogicException(
+                'parameter type of TypedCDataArray property must be a TypedCDataInterface'
+            );
+        }
+        return $element_type;
     }
 
     abstract public static function getCTypeName(): string;
 
     public function toCData(CData $cdata): CData
     {
+        /**
+         * @psalm-suppress RawObjectIteration
+         * @var string $key
+         * @var mixed $value
+         */
         foreach ($this as $key => $value) {
-            if (is_a($value, TypedCDataInterface::class, true)) {
-                $cdata->$key = $value->toCData($cdata->$key);
-            } elseif (is_a($value, TypedCDataArray::class, true)) {
-                $cdata->$key = $value->toCData($cdata->$key);
+            if (is_a($value, TypedCDataInterface::class)) {
+                /** @psalm-suppress MixedAssignment */
+                $cdata_property = $cdata->$key;
+                if (!($cdata_property instanceof CData)) {
+                    throw new \LogicException(
+                        'TypedCData must correspond to a CData'
+                    );
+                }
+                $cdata->$key = $value->toCData($cdata_property);
+            } elseif (is_a($value, TypedCDataArray::class)) {
+                /** @psalm-suppress MixedAssignment */
+                $cdata_array_property = $cdata->$key;
+                if (!($cdata_array_property instanceof CData)) {
+                    throw new \LogicException(
+                        'TypedCDataArray must correspond to a CData'
+                    );
+                }
+                /** @var \FFI\CDataArray $cdata_array_property */
+                $cdata->$key = $value->toCData($cdata_array_property);
             } else {
                 $cdata->$key = $this->$key;
             }

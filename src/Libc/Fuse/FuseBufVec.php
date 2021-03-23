@@ -51,8 +51,10 @@ final class FuseBufVec implements TypedCDataInterface
         $this->count = $count;
         $this->idx = $idx;
         $this->off = $off;
+        /** @var \FFI\CDataArray $fuse_buf */
+        $fuse_buf = FuseBuf::newCData();
         $this->buf = $buf ?? new TypedCDataArray(
-            FuseBuf::newCData(),
+            $fuse_buf,
             FuseBuf::class
         );
     }

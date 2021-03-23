@@ -65,7 +65,6 @@ final class Stat implements TypedCDataInterface
     public TimeSpec $st_atim;
     public TimeSpec $st_mtim;
     public TimeSpec $st_ctim;
-    /** @var int[] */
     public ?CData $reserved;
 
     public function __construct(
@@ -83,7 +82,6 @@ final class Stat implements TypedCDataInterface
         ?TimeSpec $st_atim = null,
         ?TimeSpec $st_mtim = null,
         ?TimeSpec $st_ctim = null,
-        /** @var int[] */
         ?CData $reserved = null
     ) {
         $this->st_dev = $st_dev;

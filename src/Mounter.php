@@ -22,6 +22,12 @@ class Mounter
         $this->fuse = $fuse ?? Fuse::getInstance();
     }
 
+    /**
+     * @param string $path
+     * @param Mountable $mountable
+     * @param list<string>|null $args
+     * @return int
+     */
     public function mount(string $path, Mountable $mountable, array $args = null): int
     {
         $args ??= [

@@ -41,6 +41,7 @@ trait MountableFilesystemTrait
 
         $fuse_operations->getattr = [$this, 'getattr'];
         $fuse_operations->readlink = [$this, 'readlink'];
+        /** @psalm-suppress DeprecatedProperty */
         $fuse_operations->getdir = [$this, 'getdir'];
         $fuse_operations->mknod = [$this, 'mknod'];
         $fuse_operations->mkdir = [$this, 'mkdir'];

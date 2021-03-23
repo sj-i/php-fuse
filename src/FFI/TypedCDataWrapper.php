@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Fuse\FFI;
 
+use bar\foo\baz\TestClass;
 use Closure;
 use FFI\CData;
+use FFI\CDataArray;
 use PhpDocTypeReader\Context\IdentifierContextFactory;
 use PhpDocTypeReader\PhpDocTypeReader;
 use PhpDocTypeReader\Type\GenericType;
@@ -37,40 +39,80 @@ final class TypedCDataWrapper
             $class = $parameter->getClass();
             if (!is_null($class) and $class->isSubclassOf(TypedCDataInterface::class)) {
                 $fromCData = $class->getMethod('fromCData');
-                $input_converters[] = fn ($cdata) => $fromCData->invoke(null, $cdata);
-                $outout_converters[] = function ($typed_c_data, CData $toCData): CData {
+                $input_converters[] = function (CData $cdata) use ($fromCData): TypedCDataInterface {
+                    /** @var TypedCDataInterface */
+                    return $fromCData->invoke(null, $cdata);
+                };
+                $outout_converters[] = function (TypedCDataInterface $typed_c_data, CData $toCData): CData {
                     return $typed_c_data->toCData($toCData);
                 };
             } elseif (!is_null($class) and $class->getName() === TypedCDataArray::class) {
                 $fromCData = $class->getMethod('fromCData');
                 $elementType = $this->getElementTypeForCDataArrayParameter($parameter);
-                $input_converters[] = fn ($cdata) => $fromCData->invoke(null, $cdata, $elementType);
-                $outout_converters[] = function ($typed_c_data_array, CData $toCData): CData {
+                $input_converters[] = function (CData $cdata) use ($fromCData, $elementType): TypedCDataArray {
+                    /** @var TypedCDataArray */
+                    return $fromCData->invoke(null, $cdata, $elementType);
+                };
+                $outout_converters[] = function (TypedCDataArray $typed_c_data_array, CData $toCData): CData {
                     return $typed_c_data_array->toCData($toCData);
                 };
             } elseif ($parameter->isPassedByReference()) {
-                $input_converters[] = fn($cdata) => $cdata[0];
-                $outout_converters[] = fn($value, CData $toCData) => $toCData[0] = $value;
+                $input_converters[] = function (CData $cdata): CData {
+                    /** @var \FFI\CDataArray $cdata */
+                    return $cdata[0];
+                };
+                $outout_converters[] =
+                    /**
+                      * @template T
+                      * @param T $value
+                      * @param \FFI\CDataArray $toCData
+                      * @return T
+                      */
+                    function ($value, CData $toCData) {
+                        return $toCData[0] = $value;
+                    };
             } else {
-                $input_converters[] = fn ($cdata) => $cdata;
-                $outout_converters[] = fn ($typed_c_data, $cdata) => $typed_c_data;
+                $input_converters[] =
+                    /**
+                      * @template T
+                      * @param T $data
+                      * @return T
+                      */
+                    fn ($data) => $data;
+                $outout_converters[] =
+                    /**
+                      * @template T
+                      * @template T2
+                      * @param T $_1
+                      * @param T2 $_2
+                      * @return T
+                      */
+                    fn ($_1, $_2) => $_1;
             }
         }
 
-        return function (...$args) use ($input_converters, $outout_converters, $callable) {
-            $new_args = [];
-            foreach ($input_converters as $key => $converter) {
-                $new_args[$key] = $converter($args[$key]);
-            }
-            $result = $callable(...$new_args);
-            foreach ($outout_converters as $key => $converter) {
-                $args[$key] = $converter($new_args[$key], $args[$key]);
-            }
-            if ($result instanceof TypedCDataInterface) {
-                $result = $result->newCData();
-            }
-            return $result;
-        };
+        return
+            /** @param mixed $args */
+            function (...$args) use ($input_converters, $outout_converters, $callable) {
+                $new_args = [];
+                foreach ($input_converters as $key => $converter) {
+                    /** @psalm-suppress MixedArgument */
+                    $new_args[$key] = $converter($args[$key]);
+                }
+                /** @psalm-suppress MixedAssignment */
+                $result = $callable(...$new_args);
+                foreach ($outout_converters as $key => $converter) {
+                    /**
+                      * @psalm-suppress PossiblyInvalidArgument
+                      * @psalm-suppress MixedArgument
+                      */
+                    $args[$key] = $converter($new_args[$key], $args[$key]);
+                }
+                if ($result instanceof TypedCDataInterface) {
+                    $result = $result->newCData();
+                }
+                return $result;
+            };
     }
 
     public function getElementTypeForCDataArrayParameter(\ReflectionParameter $parameter): string

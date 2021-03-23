@@ -36,7 +36,7 @@ final class CBytesBuffer implements TypedCDataInterface
         return 'char *';
     }
 
-    public function write(string $content, $size): void
+    public function write(string $content, int $size): void
     {
         \FFI::memcpy($this->cdata, $content, $size);
     }

@@ -169,8 +169,6 @@ interface FilesystemInterface extends Mountable
 
     /**
      * int (*readdir) (const char *, void *, fuse_fill_dir_t, off_t, struct fuse_file_info *);
-     *
-     * @psalm-param callable(FuseReadDirBuffer $buf, string $name, Stat $stbuf, int $off):int $filler
      */
     public function readdir(
         string $path,

@@ -28,10 +28,10 @@ composer require sj-i/php-fuse
 - If you want to write a filesystem in PHP by using this library, see [examples](https://github.com/sj-i/php-fuse/tree/master/example) in this repository and [the libfuse API documentation](https://libfuse.github.io/doxygen/index.html) for now.
 
 ## Todo
-- [] bump libfuse to 3.9
-- [] add more tests
-- [] add documentation
-- [] support multithreading
+- [ ] bump libfuse to 3.9
+- [ ] add more tests
+- [ ] add documentation
+- [ ] support multithreading
 
 
 ## LICENSE

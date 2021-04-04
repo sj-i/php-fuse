@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Fuse\FFI;
 
-use bar\foo\baz\TestClass;
 use Closure;
 use FFI\CData;
 use FFI\CDataArray;

@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Fuse\Libc\Fuse;
 
 use FFI\CData;
-use Fuse\FFI\TypedCDataInterface;
 use Fuse\Libc\Sys\Stat\Stat;
+use TypedCData\TypedCDataInterface;
 
 /**
  * typedef int (*fuse_fill_dir_t) (void *buf, const char *name, const struct stat *stbuf, off_t off);

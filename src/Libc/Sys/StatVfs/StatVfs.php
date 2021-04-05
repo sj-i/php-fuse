@@ -15,7 +15,7 @@ namespace Fuse\Libc\Sys\StatVfs;
 
 use FFI\CData;
 use Fuse\FFI\TypedCDataDefaultImplementationTrait;
-use Fuse\FFI\TypedCDataInterface;
+use TypedCData\TypedCDataInterface;
 
 /**
  * struct statvfs

@@ -15,7 +15,7 @@ namespace Fuse\Libc\Fuse;
 
 use FFI\CData;
 use Fuse\FFI\TypedCDataDefaultImplementationTrait;
-use Fuse\FFI\TypedCDataInterface;
+use TypedCData\TypedCDataInterface;
 
 /**
  * struct fuse_buf

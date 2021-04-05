@@ -17,6 +17,7 @@ use Fuse\Fuse;
 use Fuse\Libc\Fuse\FuseBufVec;
 use Fuse\Libc\Sys\Stat\Stat;
 use PHPUnit\Framework\TestCase;
+use TypedCData\TypedCDataWrapper;
 
 class TypedCDataWrapperTest extends TestCase
 {

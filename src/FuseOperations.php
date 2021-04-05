@@ -15,8 +15,6 @@ namespace Fuse;
 
 use FFI;
 use FFI\CData;
-use Fuse\FFI\TypedCDataArray;
-use Fuse\FFI\TypedCDataWrapper;
 use Fuse\Libc\Fcntl\Flock;
 use Fuse\Libc\Fuse\FuseBufVec;
 use Fuse\Libc\Fuse\FuseConnInfo;
@@ -35,6 +33,8 @@ use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
 use Fuse\Libc\Utime\UtimBuf;
 use ReflectionClass;
+use TypedCData\TypedCDataArray;
+use TypedCData\TypedCDataWrapper;
 
 // phpcs:disable Generic.Files.LineLength
 /**

@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Fuse\Libc\Sys\Stat;
 
 use FFI\CData;
-use Fuse\FFI\TypedCDataInterface;
-use Fuse\Libc\Time\TimeSpec;
 use Fuse\FFI\TypedCDataDefaultImplementationTrait;
+use Fuse\Libc\Time\TimeSpec;
+use TypedCData\TypedCDataInterface;
 
 /**
  * struct stat

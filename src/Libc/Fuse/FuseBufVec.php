@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Fuse\Libc\Fuse;
 
-use Fuse\FFI\TypedCDataArray;
 use Fuse\FFI\TypedCDataDefaultImplementationTrait;
-use Fuse\FFI\TypedCDataInterface;
+use TypedCData\TypedCDataArray;
+use TypedCData\TypedCDataInterface;
 
 /**
  * struct fuse_bufvec

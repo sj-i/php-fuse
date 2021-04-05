@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Fuse\Libc\Fuse;
 
 use FFI\CData;
-use Fuse\FFI\TypedCDataInterface;
+use TypedCData\TypedCDataInterface;
 
 /**
  * typedef int (*fuse_dirfil_t) (fuse_dirh_t h, const char *name, int type, ino_t ino);

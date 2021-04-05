@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Fuse\Libc\Utime;
 
 use Fuse\FFI\TypedCDataDefaultImplementationTrait;
-use Fuse\FFI\TypedCDataInterface;
+use TypedCData\TypedCDataInterface;
 
 /**
  * struct utimbuf

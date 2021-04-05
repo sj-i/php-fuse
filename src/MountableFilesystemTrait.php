@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Fuse;
 
-use Fuse\FFI\TypedCDataArray;
 use Fuse\Libc\Fcntl\Flock;
 use Fuse\Libc\Fuse\FuseBufVec;
 use Fuse\Libc\Fuse\FuseConnInfo;
@@ -32,6 +31,7 @@ use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
 use Fuse\Libc\Time\TimeSpec;
 use Fuse\Libc\Utime\UtimBuf;
+use TypedCData\TypedCDataArray;
 
 trait MountableFilesystemTrait
 {

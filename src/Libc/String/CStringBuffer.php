@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Fuse\Libc\String;
 
 use FFI\CData;
-use Fuse\FFI\TypedCDataInterface;
+use TypedCData\TypedCDataInterface;
 
 final class CStringBuffer implements TypedCDataInterface
 {

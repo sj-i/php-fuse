@@ -33,6 +33,7 @@ use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
 use Fuse\Libc\Utime\UtimBuf;
 use ReflectionClass;
+use TypedCData\TypedCDataArray;
 use TypedCData\TypedCDataWrapper;
 
 // phpcs:disable Generic.Files.LineLength

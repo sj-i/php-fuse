@@ -43,6 +43,7 @@ final class CStringBuffer implements TypedCDataInterface
 
     public static function newCData(): CData
     {
+        /** @var CData */
         return \FFI::new('char[1]');
     }
 }

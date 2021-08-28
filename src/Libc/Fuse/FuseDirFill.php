@@ -26,6 +26,7 @@ final class FuseDirFill implements TypedCDataInterface
 
     public function __invoke(FuseDirHandle $dirhandle, string $name, int $type, int $ino): int
     {
+        /** @var int */
         return ($this->cdata)($dirhandle->toCData(null), $name, $type, $ino);
     }
 

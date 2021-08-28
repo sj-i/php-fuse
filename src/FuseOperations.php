@@ -444,6 +444,7 @@ final class FuseOperations implements Mountable
             }
             $fuse_operations->$name = $typed_cdata_wrapper->createWrapper($callable);
         }
+        assert(!is_null($fuse_operations));
         return $this->cdata_cache = $fuse_operations;
     }
 
@@ -467,6 +468,7 @@ final class FuseOperations implements Mountable
         $type = Fuse::getInstance()->ffi->type(
             $typename
         );
+        assert(!is_null($type));
         $size = FFI::sizeof(
             $type
         );

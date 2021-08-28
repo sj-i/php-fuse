@@ -30,6 +30,7 @@ final class FuseFillDir implements TypedCDataInterface
         if (!is_null($stbuf)) {
             $stbuf = $stbuf->toCData($stbuf->newCData());
         }
+        /** @var int */
         return ($this->cdata)($buf->toCData(null), $name, $stbuf, $off);
     }
 

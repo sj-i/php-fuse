@@ -439,27 +439,10 @@ final class FuseOperations implements Mountable
                 continue;
             }
             assert(is_callable($callable));
-            if ($this->isDefault($callable)) {
-                continue;
-            }
             $fuse_operations->$name = $typed_cdata_wrapper->createWrapper($callable);
         }
         assert(!is_null($fuse_operations));
         return $this->cdata_cache = $fuse_operations;
-    }
-
-    private function isDefault(callable $callable): bool
-    {
-        if (!is_array($callable)) {
-            return false;
-        }
-        if (!is_object($callable[0])) {
-            return false;
-        }
-        $class = new ReflectionClass(get_class($callable[0]));
-        $method = $class->getMethod($callable[1]);
-        $trait = new ReflectionClass(FilesystemDefaultImplementationTrait::class);
-        return $method->getFileName() === $trait->getFileName();
     }
 
     public function getSize(): int

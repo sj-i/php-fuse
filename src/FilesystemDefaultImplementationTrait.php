@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Fuse;
 
+use Fuse\Libc\Errno\Errno;
 use Fuse\Libc\Fcntl\Flock;
 use Fuse\Libc\Fuse\FuseBufVec;
 use Fuse\Libc\Fuse\FuseConnInfo;
@@ -42,7 +43,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function getattr(string $path, Stat $stat): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -50,7 +51,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function readlink(string $path, CStringBuffer $buffer, int $size): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -60,7 +61,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function getdir(string $path, FuseDirHandle $dirhandle, FuseDirFill $dirfill): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -68,7 +69,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function mknod(string $path, int $mode, int $dev): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -76,7 +77,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function mkdir(string $path, int $mode): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -84,7 +85,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function unlink(string $path): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -92,7 +93,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function rmdir(string $path): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -100,7 +101,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function symlink(string $path, string $link): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -108,7 +109,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function rename(string $from, string $to): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -116,7 +117,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function link(string $path, string $link): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -124,7 +125,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function chmod(string $path, int $mode): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -132,7 +133,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function chown(string $path, int $uid, int $gid): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -140,7 +141,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function truncate(string $path, int $offset): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -148,7 +149,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function utime(string $path, UtimBuf $utime_buf): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -156,7 +157,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function open(string $path, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return 0;
     }
 
     /**
@@ -164,7 +165,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function read(string $path, CBytesBuffer $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -172,7 +173,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function write(string $path, string $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -180,7 +181,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function statfs(string $path, StatVfs $statvfs): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -188,7 +189,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function flush(string $path, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -196,7 +197,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function release(string $path, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -204,7 +205,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function fsync(string $path, int $flags, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -212,23 +213,23 @@ trait FilesystemDefaultImplementationTrait
      */
     public function setxattr(string $path, string $name, string $value, int $size): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
      * int (*getxattr) (const char *, const char *, char *, size_t);
      */
-    public function getxattr(string $path, string $name, string &$value, int $size): int
+    public function getxattr(string $path, string $name, ?string &$value, int $size): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
      * int (*listxattr) (const char *, char *, size_t);*
      */
-    public function listxattr(string $path, int $size): int
+    public function listxattr(string $path, ?string &$value, int $size): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -236,7 +237,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function removexattr(string $size, string $name): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -244,7 +245,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function opendir(string $path, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return 0;
     }
 
     /**
@@ -257,7 +258,7 @@ trait FilesystemDefaultImplementationTrait
         int $offset,
         FuseFileInfo $fuse_file_info
     ): int {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -265,7 +266,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function releasedir(string $path, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -273,7 +274,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function fsyncdir(string $path, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -281,15 +282,14 @@ trait FilesystemDefaultImplementationTrait
      */
     public function init(FuseConnInfo $conn): ?FusePrivateData
     {
-        throw new FuseLogicException('not implemented');
+        return null;
     }
 
     /**
      * void (*destroy) (void *);
      */
-    public function destroy(FusePrivateData $private_data): void
+    public function destroy(?FusePrivateData $private_data): void
     {
-        throw new FuseLogicException('not implemented');
     }
 
     /**
@@ -297,7 +297,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function access(string $path, int $mode): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -305,7 +305,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function create(string $path, int $mode, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -313,7 +313,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function ftruncate(string $path, int $offset, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -321,7 +321,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function fgetattr(string $path, Stat $stat, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -329,7 +329,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function lock(string $path, FuseFileInfo $fuse_file_info, int $cmd, Flock $flock): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -339,7 +339,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function utimens(string $path, TypedCDataArray $tv): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -347,7 +347,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function bmap(string $path, int $blocksize, int &$idx): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
 
@@ -402,7 +402,7 @@ trait FilesystemDefaultImplementationTrait
         int $flags,
         FuseIoctlDataPointer $data
     ): int {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -414,7 +414,7 @@ trait FilesystemDefaultImplementationTrait
         FusePollHandle $fuse_pollhandle,
         int &$reventsp
     ): int {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -422,15 +422,22 @@ trait FilesystemDefaultImplementationTrait
      */
     public function writeBuf(string $path, FuseBufVec $buf, int $offset, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
      * int (*read_buf) (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *);
+     *
+     * @param TypedCDataArray<FuseBufVec> $bufp
      */
-    public function readBuf(string $path, FuseBufVec $bufp, int $size, int $offset, FuseFileInfo $fuse_file_info): int
-    {
-        throw new FuseLogicException('not implemented');
+    public function readBuf(
+        string $path,
+        TypedCDataArray $bufp,
+        int $size,
+        int $offset,
+        FuseFileInfo $fuse_file_info
+    ): int {
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -438,7 +445,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function flock(string $path, FuseFileInfo $fuse_file_info, int $op): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 
     /**
@@ -446,6 +453,6 @@ trait FilesystemDefaultImplementationTrait
      */
     public function fallocate(string $path, int $mode, int $offset, FuseFileInfo $fuse_file_info): int
     {
-        throw new FuseLogicException('not implemented');
+        return -Errno::ENOSYS;
     }
 }

@@ -150,12 +150,12 @@ interface FilesystemInterface extends Mountable
     /**
      * int (*getxattr) (const char *, const char *, char *, size_t);
      */
-    public function getxattr(string $path, string $name, string &$value, int $size): int;
+    public function getxattr(string $path, string $name, ?string &$value, int $size): int;
 
     /**
      * int (*listxattr) (const char *, char *, size_t);*
      */
-    public function listxattr(string $path, int $size): int;
+    public function listxattr(string $path, ?string &$value, int $size): int;
 
     /**
      * int (*removexattr) (const char *, const char *);
@@ -277,8 +277,16 @@ interface FilesystemInterface extends Mountable
 
     /**
      * int (*read_buf) (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *);
+     *
+     * @param TypedCDataArray<FuseBufVec> $bufp
      */
-    public function readBuf(string $path, FuseBufVec $bufp, int $size, int $offset, FuseFileInfo $fuse_file_info): int;
+    public function readBuf(
+        string $path,
+        TypedCDataArray $bufp,
+        int $size,
+        int $offset,
+        FuseFileInfo $fuse_file_info
+    ): int;
 
     /**
      * int (*flock) (const char *, struct fuse_file_info *, int op);

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Fuse;
 
+/** @deprecated */
 class FuseLogicException extends \LogicException
 {
 

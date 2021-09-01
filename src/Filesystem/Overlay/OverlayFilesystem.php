@@ -11,9 +11,11 @@
 
 declare(strict_types=1);
 
-namespace Fuse;
+namespace Fuse\Filesystem\Overlay;
 
-use Fuse\Libc\Errno\Errno;
+use Fuse\Filesystem\ReflectionFilesystem;
+use Fuse\FilesystemFlagsImplementationTrait;
+use Fuse\FilesystemInterface;
 use Fuse\Libc\Fcntl\Flock;
 use Fuse\Libc\Fuse\FuseBufVec;
 use Fuse\Libc\Fuse\FuseConnInfo;
@@ -32,19 +34,43 @@ use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
 use Fuse\Libc\Time\TimeSpec;
 use Fuse\Libc\Utime\UtimBuf;
+use Fuse\MountableFilesystemTrait;
 use TypedCData\TypedCDataArray;
 
-trait FilesystemDefaultImplementationTrait
+final class OverlayFilesystem implements FilesystemInterface
 {
     use MountableFilesystemTrait;
     use FilesystemFlagsImplementationTrait;
+
+    private FilesystemInterface $main;
+    private FilesystemInterface $fallback;
+
+    public function __construct(
+        FilesystemInterface $main,
+        FilesystemInterface $fallback
+    ) {
+        $this->main = $main;
+        $this->fallback = $fallback;
+    }
+
+    /** @return int|FusePrivateData|null|void */
+    private function fallbackIfDefault(string $method_name, array $args)
+    {
+        if (ReflectionFilesystem::instance($this->main)->isDefault($method_name)) {
+            /** @var int|FusePrivateData|null|void */
+            return $this->fallback->$method_name(...$args);
+        }
+        /** @var int|FusePrivateData|null|void */
+        return $this->main->$method_name(...$args);
+    }
 
     /**
      * int (*getattr) (const char *, struct stat *);
      */
     public function getattr(string $path, Stat $stat): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -52,7 +78,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function readlink(string $path, CStringBuffer $buffer, int $size): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -62,7 +89,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function getdir(string $path, FuseDirHandle $dirhandle, FuseDirFill $dirfill): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -70,7 +98,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function mknod(string $path, int $mode, int $dev): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -78,7 +107,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function mkdir(string $path, int $mode): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -86,7 +116,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function unlink(string $path): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -94,7 +125,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function rmdir(string $path): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -102,7 +134,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function symlink(string $path, string $link): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -110,7 +143,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function rename(string $from, string $to): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -118,7 +152,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function link(string $path, string $link): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -126,7 +161,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function chmod(string $path, int $mode): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -134,7 +170,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function chown(string $path, int $uid, int $gid): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -142,7 +179,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function truncate(string $path, int $offset): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -150,7 +188,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function utime(string $path, UtimBuf $utime_buf): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -158,7 +197,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function open(string $path, FuseFileInfo $fuse_file_info): int
     {
-        return 0;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -166,7 +206,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function read(string $path, CBytesBuffer $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -174,7 +215,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function write(string $path, string $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -182,7 +224,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function statfs(string $path, StatVfs $statvfs): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -190,7 +233,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function flush(string $path, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -198,7 +242,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function release(string $path, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -206,7 +251,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function fsync(string $path, int $flags, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -214,7 +260,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function setxattr(string $path, string $name, string $value, int $size): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -222,7 +269,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function getxattr(string $path, string $name, ?string &$value, int $size): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -230,7 +278,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function listxattr(string $path, ?string &$value, int $size): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -238,7 +287,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function removexattr(string $size, string $name): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -246,7 +296,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function opendir(string $path, FuseFileInfo $fuse_file_info): int
     {
-        return 0;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -259,7 +310,8 @@ trait FilesystemDefaultImplementationTrait
         int $offset,
         FuseFileInfo $fuse_file_info
     ): int {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -267,7 +319,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function releasedir(string $path, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -275,7 +328,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function fsyncdir(string $path, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -283,7 +337,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function init(FuseConnInfo $conn): ?FusePrivateData
     {
-        return null;
+        /** @var null|FusePrivateData */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -291,6 +346,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function destroy(?FusePrivateData $private_data): void
     {
+        $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -298,7 +354,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function access(string $path, int $mode): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -306,7 +363,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function create(string $path, int $mode, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -314,7 +372,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function ftruncate(string $path, int $offset, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -322,7 +381,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function fgetattr(string $path, Stat $stat, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -330,7 +390,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function lock(string $path, FuseFileInfo $fuse_file_info, int $cmd, Flock $flock): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -340,7 +401,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function utimens(string $path, TypedCDataArray $tv): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -348,7 +410,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function bmap(string $path, int $blocksize, int &$idx): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -362,7 +425,8 @@ trait FilesystemDefaultImplementationTrait
         int $flags,
         FuseIoctlDataPointer $data
     ): int {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -374,7 +438,8 @@ trait FilesystemDefaultImplementationTrait
         FusePollHandle $fuse_pollhandle,
         int &$reventsp
     ): int {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -382,7 +447,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function writeBuf(string $path, FuseBufVec $buf, int $offset, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -397,7 +463,8 @@ trait FilesystemDefaultImplementationTrait
         int $offset,
         FuseFileInfo $fuse_file_info
     ): int {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -405,7 +472,8 @@ trait FilesystemDefaultImplementationTrait
      */
     public function flock(string $path, FuseFileInfo $fuse_file_info, int $op): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
     /**
@@ -413,6 +481,7 @@ trait FilesystemDefaultImplementationTrait
      */
     public function fallocate(string $path, int $mode, int $offset, FuseFileInfo $fuse_file_info): int
     {
-        return -Errno::ENOSYS;
+        /** @var int */
+        return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 }

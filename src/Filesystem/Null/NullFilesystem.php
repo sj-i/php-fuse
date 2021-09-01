@@ -11,10 +11,12 @@
 
 declare(strict_types=1);
 
-namespace Fuse;
+namespace Fuse\Filesystem\Null;
 
-/** @deprecated */
-class FuseLogicException extends \LogicException
+use Fuse\FilesystemDefaultImplementationTrait;
+use Fuse\FilesystemInterface;
+
+final class NullFilesystem implements FilesystemInterface
 {
-
+    use FilesystemDefaultImplementationTrait;
 }

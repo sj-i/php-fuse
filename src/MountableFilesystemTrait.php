@@ -218,12 +218,12 @@ trait MountableFilesystemTrait
     /**
      * int (*getxattr) (const char *, const char *, char *, size_t);
      */
-    abstract public function getxattr(string $path, string $name, string &$value, int $size): int;
+    abstract public function getxattr(string $path, string $name, ?string &$value, int $size): int;
 
     /**
      * int (*listxattr) (const char *, char *, size_t);*
      */
-    abstract public function listxattr(string $path, int $size): int;
+    abstract public function listxattr(string $path, ?string &$value, int $size): int;
 
     /**
      * int (*removexattr) (const char *, const char *);
@@ -264,7 +264,7 @@ trait MountableFilesystemTrait
     /**
      * void (*destroy) (void *);
      */
-    abstract public function destroy(FusePrivateData $private_data): void;
+    abstract public function destroy(?FusePrivateData $private_data): void;
 
     /**
      * int (*access) (const char *, int);
@@ -345,10 +345,12 @@ trait MountableFilesystemTrait
 
     /**
      * int (*read_buf) (const char *, struct fuse_bufvec **bufp, size_t size, off_t off, struct fuse_file_info *);
+     *
+     * @param TypedCDataArray<FuseBufVec> $bufp
      */
     abstract public function readBuf(
         string $path,
-        FuseBufVec $bufp,
+        TypedCDataArray $bufp,
         int $size,
         int $offset,
         FuseFileInfo $fuse_file_info

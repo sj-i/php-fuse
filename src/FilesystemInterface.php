@@ -160,7 +160,7 @@ interface FilesystemInterface extends Mountable
     /**
      * int (*removexattr) (const char *, const char *);
      */
-    public function removexattr(string $size, string $name): int;
+    public function removexattr(string $path, string $name): int;
 
     /**
      * int (*opendir) (const char *, struct fuse_file_info *);

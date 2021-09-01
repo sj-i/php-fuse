@@ -276,7 +276,7 @@ trait DelegationFilesystemTrait
     /**
      * int (*removexattr) (const char *, const char *);
      */
-    public function removexattr(string $size, string $name): int
+    public function removexattr(string $path, string $name): int
     {
         /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());

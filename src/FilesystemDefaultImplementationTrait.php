@@ -37,6 +37,7 @@ use TypedCData\TypedCDataArray;
 trait FilesystemDefaultImplementationTrait
 {
     use MountableFilesystemTrait;
+    use FilesystemFlagsImplementationTrait;
 
     /**
      * int (*getattr) (const char *, struct stat *);
@@ -348,47 +349,6 @@ trait FilesystemDefaultImplementationTrait
     public function bmap(string $path, int $blocksize, int &$idx): int
     {
         return -Errno::ENOSYS;
-    }
-
-
-    /**
-     * unsigned int flag_nullpath_ok:1;
-     * unsigned int flag_nopath:1;
-     * unsigned int flag_utime_omit_ok:1;
-     * unsigned int flag_reserved:29;
-     */
-    private bool $flag_nullpath_ok = false;
-    private bool $flag_nopath = false;
-    private bool $flag_utime_omit_ok = false;
-
-    public function setFlagNullpathOk(bool $flag): void
-    {
-        $this->flag_nullpath_ok = $flag;
-    }
-
-    public function getFlagNullpathOk(): bool
-    {
-        return $this->flag_nullpath_ok;
-    }
-
-    public function setFlagNopath(bool $flag): void
-    {
-        $this->flag_nopath = $flag;
-    }
-
-    public function getFlagNopath(): bool
-    {
-        return $this->flag_nopath;
-    }
-
-    public function setFlagUtimeOmitOk(bool $flag): void
-    {
-        $this->flag_utime_omit_ok = $flag;
-    }
-
-    public function getFlagUtimeOmitOk(): bool
-    {
-        return $this->flag_utime_omit_ok;
     }
 
     /**

@@ -53,11 +53,14 @@ final class OverlayFilesystem implements FilesystemInterface
         $this->fallback = $fallback;
     }
 
+    /** @return int|FusePrivateData|null|void */
     private function fallbackIfDefault(string $method_name, array $args)
     {
         if (ReflectionFilesystem::instance($this->main)->isDefault($method_name)) {
+            /** @var int|FusePrivateData|null|void */
             return $this->fallback->$method_name(...$args);
         }
+        /** @var int|FusePrivateData|null|void */
         return $this->main->$method_name(...$args);
     }
 
@@ -66,6 +69,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function getattr(string $path, Stat $stat): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -74,6 +78,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function readlink(string $path, CStringBuffer $buffer, int $size): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -84,6 +89,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function getdir(string $path, FuseDirHandle $dirhandle, FuseDirFill $dirfill): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -92,6 +98,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function mknod(string $path, int $mode, int $dev): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -100,6 +107,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function mkdir(string $path, int $mode): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -108,6 +116,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function unlink(string $path): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -116,6 +125,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function rmdir(string $path): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -124,6 +134,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function symlink(string $path, string $link): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -132,6 +143,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function rename(string $from, string $to): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -140,6 +152,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function link(string $path, string $link): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -148,6 +161,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function chmod(string $path, int $mode): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -156,6 +170,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function chown(string $path, int $uid, int $gid): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -164,6 +179,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function truncate(string $path, int $offset): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -172,6 +188,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function utime(string $path, UtimBuf $utime_buf): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -180,6 +197,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function open(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -188,6 +206,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function read(string $path, CBytesBuffer $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -196,6 +215,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function write(string $path, string $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -204,6 +224,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function statfs(string $path, StatVfs $statvfs): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -212,6 +233,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function flush(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -220,6 +242,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function release(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -228,6 +251,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function fsync(string $path, int $flags, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -236,6 +260,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function setxattr(string $path, string $name, string $value, int $size): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -244,6 +269,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function getxattr(string $path, string $name, ?string &$value, int $size): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -252,6 +278,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function listxattr(string $path, ?string &$value, int $size): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -260,6 +287,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function removexattr(string $size, string $name): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -268,6 +296,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function opendir(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -281,6 +310,7 @@ final class OverlayFilesystem implements FilesystemInterface
         int $offset,
         FuseFileInfo $fuse_file_info
     ): int {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -289,6 +319,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function releasedir(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -297,6 +328,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function fsyncdir(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -305,6 +337,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function init(FuseConnInfo $conn): ?FusePrivateData
     {
+        /** @var null|FusePrivateData */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -321,6 +354,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function access(string $path, int $mode): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -329,6 +363,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function create(string $path, int $mode, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -337,6 +372,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function ftruncate(string $path, int $offset, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -345,6 +381,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function fgetattr(string $path, Stat $stat, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -353,6 +390,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function lock(string $path, FuseFileInfo $fuse_file_info, int $cmd, Flock $flock): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -363,6 +401,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function utimens(string $path, TypedCDataArray $tv): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -371,6 +410,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function bmap(string $path, int $blocksize, int &$idx): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -385,6 +425,7 @@ final class OverlayFilesystem implements FilesystemInterface
         int $flags,
         FuseIoctlDataPointer $data
     ): int {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -397,6 +438,7 @@ final class OverlayFilesystem implements FilesystemInterface
         FusePollHandle $fuse_pollhandle,
         int &$reventsp
     ): int {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -405,6 +447,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function writeBuf(string $path, FuseBufVec $buf, int $offset, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -420,6 +463,7 @@ final class OverlayFilesystem implements FilesystemInterface
         int $offset,
         FuseFileInfo $fuse_file_info
     ): int {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -428,6 +472,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function flock(string $path, FuseFileInfo $fuse_file_info, int $op): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 
@@ -436,6 +481,7 @@ final class OverlayFilesystem implements FilesystemInterface
      */
     public function fallocate(string $path, int $mode, int $offset, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }
 }

@@ -26,7 +26,7 @@ final class ReflectionFilesystem
         $this->filesystem = $filesystem;
     }
 
-    public static function instance(FilesystemInterface $filesystem)
+    public static function instance(FilesystemInterface $filesystem): self
     {
         return new self($filesystem);
     }

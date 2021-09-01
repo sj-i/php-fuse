@@ -77,6 +77,7 @@ final class BeforeAllFilesystem implements FilesystemInterface
     public function getdir(string $path, FuseDirHandle $dirhandle, FuseDirFill $dirfill): int
     {
         ($this->callback)(__FUNCTION__, func_get_args());
+        /** @psalm-suppress DeprecatedMethod */
         return $this->getFilesystem()->getdir($path, $dirhandle, $dirfill);
     }
 

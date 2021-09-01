@@ -43,13 +43,15 @@ trait DelegationFilesystemTrait
 
     private FilesystemInterface $filesystem;
 
-    private function setDelegation(FilesystemInterface $filesystem)
+    private function setDelegation(FilesystemInterface $filesystem): void
     {
         $this->filesystem = $filesystem;
     }
 
+    /** @return int|null|FusePrivateData|void */
     private function delegate(string $method_name, array $args)
     {
+        /** @var int|null|FusePrivateData|void */
         return $this->filesystem->$method_name(...$args);
     }
 
@@ -58,6 +60,7 @@ trait DelegationFilesystemTrait
      */
     public function getattr(string $path, Stat $stat): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -66,6 +69,7 @@ trait DelegationFilesystemTrait
      */
     public function readlink(string $path, CStringBuffer $buffer, int $size): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -76,6 +80,7 @@ trait DelegationFilesystemTrait
      */
     public function getdir(string $path, FuseDirHandle $dirhandle, FuseDirFill $dirfill): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -84,6 +89,7 @@ trait DelegationFilesystemTrait
      */
     public function mknod(string $path, int $mode, int $dev): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -92,6 +98,7 @@ trait DelegationFilesystemTrait
      */
     public function mkdir(string $path, int $mode): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -100,6 +107,7 @@ trait DelegationFilesystemTrait
      */
     public function unlink(string $path): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -108,6 +116,7 @@ trait DelegationFilesystemTrait
      */
     public function rmdir(string $path): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -116,6 +125,7 @@ trait DelegationFilesystemTrait
      */
     public function symlink(string $path, string $link): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -124,6 +134,7 @@ trait DelegationFilesystemTrait
      */
     public function rename(string $from, string $to): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -132,6 +143,7 @@ trait DelegationFilesystemTrait
      */
     public function link(string $path, string $link): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -140,6 +152,7 @@ trait DelegationFilesystemTrait
      */
     public function chmod(string $path, int $mode): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -148,6 +161,7 @@ trait DelegationFilesystemTrait
      */
     public function chown(string $path, int $uid, int $gid): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -156,6 +170,7 @@ trait DelegationFilesystemTrait
      */
     public function truncate(string $path, int $offset): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -164,6 +179,7 @@ trait DelegationFilesystemTrait
      */
     public function utime(string $path, UtimBuf $utime_buf): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -172,6 +188,7 @@ trait DelegationFilesystemTrait
      */
     public function open(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -180,6 +197,7 @@ trait DelegationFilesystemTrait
      */
     public function read(string $path, CBytesBuffer $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -188,6 +206,7 @@ trait DelegationFilesystemTrait
      */
     public function write(string $path, string $buffer, int $size, int $offset, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -196,6 +215,7 @@ trait DelegationFilesystemTrait
      */
     public function statfs(string $path, StatVfs $statvfs): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -204,6 +224,7 @@ trait DelegationFilesystemTrait
      */
     public function flush(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -212,6 +233,7 @@ trait DelegationFilesystemTrait
      */
     public function release(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -220,6 +242,7 @@ trait DelegationFilesystemTrait
      */
     public function fsync(string $path, int $flags, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -228,6 +251,7 @@ trait DelegationFilesystemTrait
      */
     public function setxattr(string $path, string $name, string $value, int $size): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -236,6 +260,7 @@ trait DelegationFilesystemTrait
      */
     public function getxattr(string $path, string $name, ?string &$value, int $size): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -244,6 +269,7 @@ trait DelegationFilesystemTrait
      */
     public function listxattr(string $path, ?string &$value, int $size): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -252,6 +278,7 @@ trait DelegationFilesystemTrait
      */
     public function removexattr(string $size, string $name): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -260,6 +287,7 @@ trait DelegationFilesystemTrait
      */
     public function opendir(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -273,6 +301,7 @@ trait DelegationFilesystemTrait
         int $offset,
         FuseFileInfo $fuse_file_info
     ): int {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -281,6 +310,7 @@ trait DelegationFilesystemTrait
      */
     public function releasedir(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -289,6 +319,7 @@ trait DelegationFilesystemTrait
      */
     public function fsyncdir(string $path, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -297,6 +328,7 @@ trait DelegationFilesystemTrait
      */
     public function init(FuseConnInfo $conn): ?FusePrivateData
     {
+        /** @var ?FusePrivateData */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -313,6 +345,7 @@ trait DelegationFilesystemTrait
      */
     public function access(string $path, int $mode): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -321,6 +354,7 @@ trait DelegationFilesystemTrait
      */
     public function create(string $path, int $mode, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -329,6 +363,7 @@ trait DelegationFilesystemTrait
      */
     public function ftruncate(string $path, int $offset, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -337,6 +372,7 @@ trait DelegationFilesystemTrait
      */
     public function fgetattr(string $path, Stat $stat, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -345,6 +381,7 @@ trait DelegationFilesystemTrait
      */
     public function lock(string $path, FuseFileInfo $fuse_file_info, int $cmd, Flock $flock): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -355,6 +392,7 @@ trait DelegationFilesystemTrait
      */
     public function utimens(string $path, TypedCDataArray $tv): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -363,6 +401,7 @@ trait DelegationFilesystemTrait
      */
     public function bmap(string $path, int $blocksize, int &$idx): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -377,6 +416,7 @@ trait DelegationFilesystemTrait
         int $flags,
         FuseIoctlDataPointer $data
     ): int {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -389,6 +429,7 @@ trait DelegationFilesystemTrait
         FusePollHandle $fuse_pollhandle,
         int &$reventsp
     ): int {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -397,6 +438,7 @@ trait DelegationFilesystemTrait
      */
     public function writeBuf(string $path, FuseBufVec $buf, int $offset, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -412,6 +454,7 @@ trait DelegationFilesystemTrait
         int $offset,
         FuseFileInfo $fuse_file_info
     ): int {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -420,6 +463,7 @@ trait DelegationFilesystemTrait
      */
     public function flock(string $path, FuseFileInfo $fuse_file_info, int $op): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 
@@ -428,6 +472,7 @@ trait DelegationFilesystemTrait
      */
     public function fallocate(string $path, int $mode, int $offset, FuseFileInfo $fuse_file_info): int
     {
+        /** @var int */
         return $this->delegate(__FUNCTION__, func_get_args());
     }
 }

@@ -31,6 +31,7 @@ use Fuse\Libc\String\CBytesBuffer;
 use Fuse\Libc\String\CStringBuffer;
 use Fuse\Libc\Sys\Stat\Stat;
 use Fuse\Libc\Sys\StatVfs\StatVfs;
+use Fuse\Libc\Time\TimeSpec;
 use Fuse\Libc\Utime\UtimBuf;
 use ReflectionClass;
 use TypedCData\TypedCDataArray;
@@ -38,6 +39,8 @@ use TypedCData\TypedCDataWrapper;
 
 // phpcs:disable Generic.Files.LineLength
 /**
+ * @psalm-type TimeSpecArray       = TypedCDataArray<TimeSpec>
+ * @psalm-type FuseBufVecArray     = TypedCDataArray<FuseBufVec>
  * @psalm-type getattr_op          = callable(string $path, CData $stat): int
  * @psalm-type getattr_typed_op    = callable(string $path, Stat $stat): int
  * @psalm-type readlink_op         = callable(string $path, CData $buffer, int $size): int
@@ -71,7 +74,7 @@ use TypedCData\TypedCDataWrapper;
  * @psalm-type init_op             = callable(CData $conn): ?CData
  * @psalm-type init_typed_op       = callable(FuseConnInfo $conn): ?FusePrivateData
  * @psalm-type destroy_op          = callable(CData $private_data): void
- * @psalm-type destroy_typed_op    = callable(FusePrivateData $private_data): void
+ * @psalm-type destroy_typed_op    = callable(?FusePrivateData$private_data): void
  * @psalm-type create_op           = callable(string $path, int $mode, CData $fuse_file_info): int
  * @psalm-type create_typed_op     = callable(string $path, int $mode, FuseFileInfo $fuse_file_info): int
  * @psalm-type ftruncate_op        = callable(string $path, int $offset, CData $fuse_file_info): int
@@ -81,7 +84,7 @@ use TypedCData\TypedCDataWrapper;
  * @psalm-type lock_op             = callable(string $path, CData $fuse_file_info, int $cmd, CData $flock): int
  * @psalm-type lock_typed_op       = callable(string $path, FuseFileInfo $fuse_file_info, int $cmd, Flock $flock): int
  * @psalm-type utimens_op          = callable(string $path, CData $tv): int
- * @psalm-type utimens_typed_op    = callable(string $path, TypedCDataArray $tv): int
+ * @psalm-type utimens_typed_op    = callable(string $path, TimeSpecArray$tv): int
  * @psalm-type bmap_op             = callable(string $path, int $blocksize, CData $idx): int
  * @psalm-type bmap_typed_op       = callable(string $path, int $blocksize, int $idx): int
  * @psalm-type ioctl_op            = callable(string $path, int $cmd, CData $arg, CData $fuse_file_info, int $flags, CData $data): int
@@ -91,7 +94,7 @@ use TypedCData\TypedCDataWrapper;
  * @psalm-type write_buf_op        = callable(string $path, CData $buf, int $offset, CData $fuse_file_info): int
  * @psalm-type write_buf_typed_op  = callable(string $path, FuseBufVec $buf, int $offset, FuseFileInfo $fuse_file_info): int
  * @psalm-type read_buf_op         = callable(string $path, CData $bufp, int $size, int $offset, CData $fuse_file_info): int
- * @psalm-type read_buf_typed_op   = callable(string $path, FuseBufVec $bufp, int $size, int $offset, FuseFileInfo $fuse_file_info): int
+ * @psalm-type read_buf_typed_op   = callable(string $path, FuseBufVecArray $bufp, int $size, int $offset, FuseFileInfo $fuse_file_info): int
  * @psalm-type flock_op            = callable(string $path, CData $fuse_file_info, int $op): int
  * @psalm-type flock_typed_op      = callable(string $path, FuseFileInfo $fuse_file_info, int $op): int
  * @psalm-type fallocate_op        = callable(string $path, int $mode, int $offset, CData $fuse_file_info): int
@@ -265,7 +268,7 @@ final class FuseOperations implements Mountable
     /**
      * int (*listxattr) (const char *, char *, size_t);
      *
-     * @var null|callable(string $path, int $size): int
+     * @var null|callable(string $path, string $value, int $size): int
      */
     public $listxattr = null;
 

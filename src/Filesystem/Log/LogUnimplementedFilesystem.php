@@ -27,11 +27,22 @@ final class LogUnimplementedFilesystem implements FilesystemInterface
 
     private const DEFAULT_MESSAGE = 'An unimplemented FUSE API is called';
 
+    private const LOG_LEVELS = [
+        LogLevel::EMERGENCY,
+        LogLevel::ALERT,
+        LogLevel::CRITICAL,
+        LogLevel::ERROR,
+        LogLevel::WARNING,
+        LogLevel::NOTICE,
+        LogLevel::INFO,
+        LogLevel::DEBUG,
+    ];
+
     private LoggerInterface $logger;
     private string $log_level;
     private string $message;
 
-    /** @param value-of<LogLevel::*> $log_level */
+    /** @param value-of<self::LOG_LEVELS> $log_level */
     public function __construct(
         FilesystemInterface $filesystem,
         LoggerInterface $logger,

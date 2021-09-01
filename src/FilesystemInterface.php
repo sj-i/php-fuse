@@ -196,7 +196,7 @@ interface FilesystemInterface extends Mountable
     /**
      * void (*destroy) (void *);
      */
-    public function destroy(FusePrivateData $private_data): void;
+    public function destroy(?FusePrivateData $private_data): void;
 
     /**
      * int (*access) (const char *, int);

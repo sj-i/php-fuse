@@ -311,7 +311,7 @@ final class OverlayFilesystem implements FilesystemInterface
     /**
      * void (*destroy) (void *);
      */
-    public function destroy(FusePrivateData $private_data): void
+    public function destroy(?FusePrivateData $private_data): void
     {
         $this->fallbackIfDefault(__FUNCTION__, func_get_args());
     }

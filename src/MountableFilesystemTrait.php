@@ -264,7 +264,7 @@ trait MountableFilesystemTrait
     /**
      * void (*destroy) (void *);
      */
-    abstract public function destroy(FusePrivateData $private_data): void;
+    abstract public function destroy(?FusePrivateData $private_data): void;
 
     /**
      * int (*access) (const char *, int);

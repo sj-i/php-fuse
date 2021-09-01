@@ -303,7 +303,7 @@ trait DelegationFilesystemTrait
     /**
      * void (*destroy) (void *);
      */
-    public function destroy(FusePrivateData $private_data): void
+    public function destroy(?FusePrivateData $private_data): void
     {
         $this->delegate(__FUNCTION__, func_get_args());
     }

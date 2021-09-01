@@ -228,7 +228,7 @@ trait MountableFilesystemTrait
     /**
      * int (*removexattr) (const char *, const char *);
      */
-    abstract public function removexattr(string $size, string $name): int;
+    abstract public function removexattr(string $path, string $name): int;
 
     /**
      * int (*opendir) (const char *, struct fuse_file_info *);

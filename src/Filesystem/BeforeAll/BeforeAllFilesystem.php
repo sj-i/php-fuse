@@ -207,10 +207,10 @@ final class BeforeAllFilesystem implements FilesystemInterface
         return $this->getFilesystem()->listxattr($path, $value, $size);
     }
 
-    public function removexattr(string $size, string $name): int
+    public function removexattr(string $path, string $name): int
     {
         ($this->callback)(__FUNCTION__, func_get_args());
-        return $this->getFilesystem()->removexattr($size, $name);
+        return $this->getFilesystem()->removexattr($path, $name);
     }
 
     public function opendir(string $path, FuseFileInfo $fuse_file_info): int

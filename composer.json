@@ -24,7 +24,7 @@
     "php": "^7.4|^8.0",
     "ext-ffi": "*",
     "sj-i/phpdoc-type-reader": "0.1.1",
-    "sj-i/typed-cdata": "0.0.4",
+    "sj-i/typed-cdata": "0.0.5",
     "psr/log": "^1.1"
   },
   "require-dev": {
